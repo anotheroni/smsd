@@ -11,6 +11,7 @@ class PowerDetailsDialog(QtGui.QDialog, Ui_TableDialog):
         self.setupUi(self)
         
         self.tableWidget.setColumnCount(2)
+        self.tableWidget.setHorizontalHeaderLabels(["System", "Rating"])
         
         self.updateTable(pwrDict)
         

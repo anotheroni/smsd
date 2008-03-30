@@ -2,7 +2,7 @@
 
 # Form implementation generated from reading ui file 'table_dialog.ui'
 #
-# Created: Sat Mar 29 10:14:39 2008
+# Created: Sat Mar 29 15:39:28 2008
 #      by: PyQt4 UI code generator 4.3.3
 #
 # WARNING! All changes made in this file will be lost!
@@ -12,7 +12,7 @@ from PyQt4 import QtCore, QtGui
 class Ui_TableDialog(object):
     def setupUi(self, TableDialog):
         TableDialog.setObjectName("TableDialog")
-        TableDialog.resize(QtCore.QSize(QtCore.QRect(0,0,400,300).size()).expandedTo(TableDialog.minimumSizeHint()))
+        TableDialog.resize(QtCore.QSize(QtCore.QRect(0,0,282,254).size()).expandedTo(TableDialog.minimumSizeHint()))
 
         self.widget = QtGui.QWidget(TableDialog)
         self.widget.setGeometry(QtCore.QRect(10,10,258,227))

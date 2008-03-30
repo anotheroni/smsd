@@ -22,31 +22,58 @@ class SMSDForm(QtGui.QMainWindow):
         
         # Define Ship
         self.ship = Ship()
+        self.ui.rulesetNameLabel.setText(u"%s" % self.ship.rulesetName)
+        
+        shipClassDict = self.ship.getShipClassDict()
+        self.ui.classTableWidget.setRowCount(len(shipClassDict))
+        line = 0
+        for key in shipClassDict:
+            item = QtGui.QTableWidgetItem()
+            if shipClassDict[key][2] == sys.maxint:
+                item.setText(u"%s+" % (shipClassDict[key][1]))
+            else:
+                item.setText(u"%s-%s" % (shipClassDict[key][1], shipClassDict[key][2]))
+            self.ui.classTableWidget.setItem(line, 0, item)
+            item1 = QtGui.QTableWidgetItem()
+            item1.setText(shipClassDict[key][0])
+            self.ui.classTableWidget.setItem(line, 1, item1)
+            item2 = QtGui.QTableWidgetItem()
+            item2.setText("%d" % key)
+            self.ui.classTableWidget.setItem(line, 2, item2)
+            line += 1
+        
         self.on_massSpinBox_valueChanged(1)
 
     def updateMainStats(self):
-        percentage = (self.ship.volume - self.ship.getVolumeUsed()) * 100.0 / self.ship.volume
-        self.ui.volumeProgressBar.setValue (percentage if percentage >= 0 else 0)
-        self.ui.availableVolumeLabel.setText ("%0.2f of %d" % (self.ship.volume - self.ship.getVolumeUsed(), self.ship.volume))
+        percentage = (self.ship.getTotalVolume() - self.ship.getVolumeUsed()) * 100.0 / self.ship.getTotalVolume()
+        if percentage >= 0:
+            self.ui.volumeProgressBar.setValue(percentage)
+            self.ui.availableVolumeLabel.setText ("%0.2f of %d" % \
+             (self.ship.getTotalVolume() - self.ship.getVolumeUsed(), self.ship.getTotalVolume()))
+        else:
+            self.ui.volumeProgressBar.setValue(0)
+            self.ui.availableVolumeLabel.setText ("<font color=red><b>%0.2f of %d</b></font>" % \
+            (self.ship.getTotalVolume() - self.ship.getVolumeUsed(), self.ship.getTotalVolume()))
         self.ui.costLineEdit.setText ("%d" % self.ship.getTotalCost())
+        self.ui.classTableWidget.selectRow(self.ship.category - 1)  #TODO find the correct row
 
     @QtCore.pyqtSignature("int")
     def on_massSpinBox_valueChanged(self, mass):
         self.ship.setMass (mass)
-        self.ui.volumeSpinBox.setValue (self.ship.volume)
+        self.ui.volumeSpinBox.setValue (self.ship.getTotalVolume())
         
         # Armor Belt
         self.ship.updateArmorBelt(self.ui.armorBeltComboBox.currentIndex())
         self.ui.armorBeltCostLineEdit.setText("%d" % self.ship.getCost("Armor Belt"))        
 
         # Update RIF
-        self.ship.addVolume ("RIF", self.ship.volume * 0.01)
-        self.ui.rifVolumeLineEdit.setText ("%.2f" % (self.ship.volume * 0.01))
+        self.ship.addVolume ("RIF", self.ship.getTotalVolume() * 0.01)
+        self.ui.rifVolumeLineEdit.setText ("%.2f" % (self.ship.getTotalVolume() * 0.01))
         self.ship.addCost ("RIF", ((mass * 100) + 10000))
         self.ui.rifCostLineEdit.setText ("%d" % ((mass * 100) + 10000))
 
         # Update Power
-        self.ship.addPower("mass", mass * 0.01)
+        self.ship.addPower("Base", mass * 0.01)
 
         self.landingGearChanged()
         self.streamlinedChanged()
@@ -56,6 +83,8 @@ class SMSDForm(QtGui.QMainWindow):
     def updatePowerStats(self):
         self.ui.powerVolumeLineEdit.setText("%0.2f" % self.ship.getVolume("power"))
         self.ui.powerCostLineEdit.setText("%d" % self.ship.getCost("power"))
+        if self.__powerDialog is not None:
+            self.__powerDialog.updateTable(self.ship.getPowerDict())
 
     @QtCore.pyqtSignature("")
     def on_powerDetailsPushButton_clicked(self):
@@ -76,20 +105,20 @@ class SMSDForm(QtGui.QMainWindow):
         self.ui.streamlinedCostLineEdit.setText(self.ship.getStreamlinedCost())
         self.updateMainStats()
 
-    def fuelStorageChanged(self,  capacity):
+    def fuelStorageChanged(self, capacity):
         self.ship.changeFuelCapacity(capacity)
         self.updatePowerStats()
         self.updateMainStats()
 
     def landingGearChanged(self):
         lgState = self.ui.landingGearCheckBox.isChecked()
-        self.ship.landingGearChanged(lgState)
+        self.ship.changeLandingGear(lgState)
         self.ui.landingGearVolumeLineEdit.setText(self.ship.getLandingGearVolume())
         self.ui.landingGearCostLineEdit.setText(self.ship.getLandingGearCost())
         self.updateMainStats()
     
     @QtCore.pyqtSignature("int")
-    def on_deflectorRatingSpinBox_valueChanged(self, value):
+    def on_deflectorRatingSpinBox_valueChanged(self,value):
         self.ship.updateDeflectorScreen(value)
         self.ui.deflectorBonusLineEdit.setText("+%d" % self.ship.getDeflectorScreenBonus())
         self.ui.deflectorVolumeLineEdit.setText("%0.2f" % self.ship.getVolume("deflector"))
@@ -98,47 +127,47 @@ class SMSDForm(QtGui.QMainWindow):
         self.updateMainStats()
 
     @QtCore.pyqtSignature("int")
-    def on_accommodationCrewSpinBox_valueChanged(self,  value):
-        self.ship.addAccommodations("acc_crew",  value)
+    def on_accommodationCrewSpinBox_valueChanged(self, value):
+        self.ship.addAccommodations("acc_crew", value)
         self.ui.accommodationsCrewCostLineEdit.setText("%d" % self.ship.getCost("acc_crew"))
         self.ui.accommodationsCrewVolumeLineEdit.setText("%d" % self.ship.getVolume("acc_crew"))
         self.updateRecreationalLifeSupport()
         self.updateMainStats()
 
     @QtCore.pyqtSignature("int")
-    def on_accommodationFirstSpinBox_valueChanged(self,  value):
-        self.ship.addAccommodations("acc_first",  value)
+    def on_accommodationFirstSpinBox_valueChanged(self, value):
+        self.ship.addAccommodations("acc_first", value)
         self.ui.accommodationsFirstCostLineEdit.setText("%d" % self.ship.getCost("acc_first"))
         self.ui.accommodationsFirstVolumeLineEdit.setText("%d" % self.ship.getVolume("acc_first"))
         self.updateRecreationalLifeSupport()
         self.updateMainStats()
 
     @QtCore.pyqtSignature("int")
-    def on_accommodationStandardSpinBox_valueChanged(self,  value):
-        self.ship.addAccommodations("acc_standard",  value)
+    def on_accommodationStandardSpinBox_valueChanged(self, value):
+        self.ship.addAccommodations("acc_standard", value)
         self.ui.accommodationsStandardCostLineEdit.setText("%d" % self.ship.getCost("acc_standard"))
         self.ui.accommodationsStandardVolumeLineEdit.setText("%d" % self.ship.getVolume("acc_standard"))
         self.updateRecreationalLifeSupport()
         self.updateMainStats()
 
     @QtCore.pyqtSignature("int")
-    def on_accommodationLowSpinBox_valueChanged(self,  value):
-        self.ship.addAccommodations("acc_low",  value)
+    def on_accommodationLowSpinBox_valueChanged(self, value):
+        self.ship.addAccommodations("acc_low", value)
         self.ui.accommodationsLowCostLineEdit.setText("%d" % self.ship.getCost("acc_low"))
         self.ui.accommodationsLowVolumeLineEdit.setText("%d" % self.ship.getVolume("acc_low"))
         self.updateRecreationalLifeSupport()
         self.updateMainStats()
 
     @QtCore.pyqtSignature("int")
-    def on_accommodationCryogenicSpinBox_valueChanged(self,  value):
-        self.ship.addAccommodations("acc_cryo",  value)
+    def on_accommodationCryogenicSpinBox_valueChanged(self, value):
+        self.ship.addAccommodations("acc_cryo", value)
         self.ui.accommodationsCryogenicCostLineEdit.setText("%d" % self.ship.getCost("acc_cryo"))
         self.ui.accommodationsCryogenicVolumeLineEdit.setText("%d" % self.ship.getVolume("acc_cryo"))
         self.updateMainStats()
 
     @QtCore.pyqtSignature("int")
-    def on_accommodationSeatingSpinBox_valueChanged(self,  value):
-        self.ship.addAccommodations("acc_seating",  value)
+    def on_accommodationSeatingSpinBox_valueChanged(self, value):
+        self.ship.addAccommodations("acc_seating", value)
         self.ui.accommodationsSeatingCostLineEdit.setText("%d" % self.ship.getCost("acc_seating"))
         self.ui.accommodationsSeatingVolumeLineEdit.setText("%d" % self.ship.getVolume("acc_seating"))
         self.updateRecreationalLifeSupport()

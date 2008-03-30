@@ -1,0 +1,52 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<!DOCTYPE Space_Master_Ship_Designer_Rules>
+<SMSD_RULES version='0.1'>
+<NAME>Space Master - Star Strike Ruleset</NAME>
+<DESC>The ruleset created by ICE for Star Strike</DESC>
+# Use '+' to indicate no limit
+<SHIP_CLASS category='1' min_mass='1' max_mass='999' name='Small'></SHIP_CLASS>
+<SHIP_CLASS category='2' min_mass='1000' max_mass='99999' name='Medium'></SHIP_CLASS>
+<SHIP_CLASS category='3' min_mass='100000' max_mass='999999' name='Large'></SHIP_CLASS>
+<SHIP_CLASS category='4' min_mass='1000000' max_mass='+' name='Super Large'></SHIP_CLASS>
+
+<HULL>
+ #MIN_LIMIT = Minimum weight to use hull
+ #MAX_LIMIT = Maximum weight to use hull
+ <HULL_TYPE cat='21' volume='0.02' cost='1.0'  name='Steel'>
+    <MIN_LIMIT>1</MIN_LIMIT><MAX_LIMIT>500</MAX_LIMIT></HULL_TYPE>
+ <HULL_TYPE cat='22' volume='0.02' cost='1.5'  name='Hardened Steel'>
+    <MIN_LIMIT>1</MIN_LIMIT><MAX_LIMIT>10000</MAX_LIMIT></HULL_TYPE>
+ <HULL_TYPE cat='23' volume='0.02' cost='3.0'  name='Crysteel'>
+    <MIN_LIMIT>1</MIN_LIMIT><MAX_LIMIT>10000</MAX_LIMIT></HULL_TYPE>
+ <HULL_TYPE cat='24' volume='0.02' cost='5.5'  name='Crystanium'>
+    <MIN_LIMIT>1</MIN_LIMIT><MAX_LIMIT>10000</MAX_LIMIT></HULL_TYPE>
+ <HULL_TYPE cat='25' volume='0.06' cost='7.0'  name='Reinforced Crysteel'>
+    <MIN_LIMIT>500</MIN_LIMIT><MAX_LIMIT>50000</MAX_LIMIT></HULL_TYPE>
+ <HULL_TYPE cat='26' volume='0.10' cost='8.5'  name='Crysteel Double Hull'>
+    <MIN_LIMIT>1000</MIN_LIMIT><MAX_LIMIT>500000</MAX_LIMIT></HULL_TYPE>
+ <HULL_TYPE cat='27' volume='0.16' cost='10.0' name='Reinforced Crysteel Double Hull'>
+    <MIN_LIMIT>100000</MIN_LIMIT></HULL_TYPE>
+ <HULL_TYPE cat='28' volume='0.12' cost='15.0' name='Hardened Crystanium Double Hull'>
+    <MIN_LIMIT>100000</MIN_LIMIT></HULL_TYPE>
+ <HULL_TYPE cat='29' volume='0.08' cost='30.0' name='Ardinium'>
+    <MIN_LIMIT>100000</MIN_LIMIT></HULL_TYPE>
+ <HULL_TYPE cat='30' volume='0.04' cost='50.0' name='Ordium II'>
+    <MIN_LIMIT>100000</MIN_LIMIT></HULL_TYPE>
+ <QUALITY type='volume_percent'>
+    <NAME>Hull Volume</NAME>
+    <QUALITY_TYPE factor='-10' cost='2.0'></QUALITY_TYPE>
+    <QUALITY_TYPE factor='-20' cost='4.0'></QUALITY_TYPE>
+    <QUALITY_TYPE factor='-40' cost='8.0'></QUALITY_TYPE>
+    <QUALITY_TYPE factor='-60' cost='16.0'></QUALITY_TYPE>
+    <QUALITY_TYPE factor='-80' cost='32.0'></QUALITY_TYPE>
+ </QUALITY>
+ <QUALITY type='db'>
+    <NAME>Defence Bonus</NAME>
+    <QUALITY_TYPE factor='+5' cost='2.0'></QUALITY_TYPE>
+    <QUALITY_TYPE factor='+10' cost='4.0'></QUALITY_TYPE>
+    <QUALITY_TYPE factor='+15' cost='8.0'></QUALITY_TYPE>
+    <QUALITY_TYPE factor='+20' cost='16.0'></QUALITY_TYPE>
+    <QUALITY_TYPE factor='+25' cost='32.0'></QUALITY_TYPE>
+ </QUALITY>
+</HULL>
+</SMSD_RULES>

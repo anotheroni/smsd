@@ -1,13 +1,18 @@
+from PyQt4 import QtXml, QtCore
+from smsd_xml import SaxSMSDRulesHandler
 
 class Ship(object):
     def __init__(self, mass=1):
+        self.rulesetName = None
+                
+        self.__shipClassDict = dict()        
         self.__mass = mass 
         self.__volume = mass * 3.0
         self.category = 1
         self.__volumeUsed = dict() 
         self.__cost = dict()
         self.__power = dict()
-        self.__cat = 21
+        self.__hull = 21
         self.__armorBelt = 0
         self.__sublightDriveRating = 1
         self.__translightDriveRating = 0
@@ -20,6 +25,25 @@ class Ship(object):
         self.__recreational = 0
         self.__lifesupport = 0
         
+        fh = None
+        try:
+            handler = SaxSMSDRulesHandler(self)
+            parser = QtXml.QXmlSimpleReader()
+            parser.setContentHandler(handler)
+            parser.setErrorHandler(handler)
+            fh = QtCore.QFile("sm_original.xml")
+            input = QtXml.QXmlInputSource(fh)
+            if not parser.parse(input):
+                raise ValueError, handler.error
+        except (IOError, OSError, ValueError), e:
+            print "Failed to import: %s" % e
+        finally:
+            if fh is not None:
+                fh.close()
+        
+        if len(self.__shipClassDict) == 0:
+            print "ERROR: No ship classes"
+        
         # Index: (Name, Cost Constant)
         self.__armorBeltConstant = {0:("None", 0), 1:("+5 DB and +5% HP", 100), 2:("+10 DB and +10% HP",  200),  \
                                     3:("+15 DB and +15%HP", 300), 4:("+20 DB and +20% HP", 400), 5:("+25 DB and +25% HP",  500)}
@@ -31,9 +55,30 @@ class Ship(object):
                               11:52, 12:54, 13:56, 14:58, 15:60, 16:62, 17:64, 18:66, 19:68, 20:70, \
                               21:71, 22:72, 23:73, 24:74, 25:75, 26:76, 27:77, 28:78, 29:79, 30:80}
 
+    def getShipClassDict(self):
+        return self.__shipClassDict
+    
+    def addShipClass(self, category, name, min, max):
+        self.__shipClassDict[category] = (name, min, max)
+
     def setMass(self, mass):
         self.__mass = mass
-        self.volume = mass * 3.0
+        self.__volume = mass * 3.0
+        for cat in self.__shipClassDict:
+            if mass >= self.__shipClassDict[cat][1] and \
+                    (self.__shipClassDict[cat][2] == "+" or \
+                     mass <= self.__shipClassDict[cat][2]):
+                break
+        else:
+            print "ERROR unknown category"      #TODO fix real error handling
+            return
+        if self.category != cat:
+            self.category = cat
+            self.addVolume("power", self.getPowerRating() * (self.category ** 2 + self.getFuelCapacity() * 0.01))
+            self.addCost("power", self.getPowerRating() * (self.category ** 2) * 500 + 50000 + \
+                                                  (self.getFuelCapacity() + self.getPowerRating()) * 10)
+            self.changeLandingGear(self.__hasLandingGear)
+        
 
     def addVolume(self, part, volume):
         self.__volumeUsed[part] = volume
@@ -42,6 +87,10 @@ class Ship(object):
         try:
             del self.__volumeUsed[part]
         except KeyError: pass
+            
+        
+    def getTotalVolume(self):
+        return self.__volume
 
     def getVolume(self,  part):
         try:
@@ -99,7 +148,7 @@ class Ship(object):
     def getFuelCapacity(self):
         return self.__fuelCapacity
         
-    def changeFuelCapacity(self,  capacity):
+    def changeFuelCapacity(self,  capacity):    #TODO keep updated
         self.__fuelCapacity = capacity
         self.addCost("Fuel Storage",  (capacity + self.getPowerRating()) * 10)
         self.addVolume("Fuel Storage",  capacity * self.getPowerRating() * 0.01 )
@@ -111,10 +160,10 @@ class Ship(object):
         self.__armorBelt = index
         self.addCost("Armor Belt", self.__armorBeltConstant[index][1] * self.__mass)
 
-    def landingGearChanged(self, lgState):
+    def changeLandingGear(self, lgState):
         self.__hasLandingGear = lgState
         if (lgState):
-            self.addVolume("Landing Gear", (self.volume * 0.05 * self.category))
+            self.addVolume("Landing Gear", (self.__volume * 0.05 * self.category))
             self.addCost("Landing Gear", (self.__mass * 5 * self.category))
         else:
             self.removeVolume("Landing Gear")
