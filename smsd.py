@@ -41,7 +41,56 @@ class SMSDForm(QtGui.QMainWindow):
             item2.setText("%d" % key)
             self.ui.classTableWidget.setItem(line, 2, item2)
             line += 1
+            
+        hullTypeDict = self.ship.getHullTypeDict()
+        self.ui.hullTableWidget.setRowCount(len(hullTypeDict))
+        newHull = self.ship.findValidHull()
+        line = 0
+        for cat in hullTypeDict:
+            if cat == newHull:
+                newHullLine = line
+            item1 = QtGui.QTableWidgetItem()
+            item1.setText("%d" % cat)    # CAT
+            self.ui.hullTableWidget.setItem(line, 0, item1)
+            item2 = QtGui.QTableWidgetItem()
+            item2.setText(hullTypeDict[cat][0])  # Name
+            self.ui.hullTableWidget.setItem(line, 1, item2)
+            item3 = QtGui.QTableWidgetItem()
+            item3.setText("%0.2f" % hullTypeDict[cat][1])  # Volume Factor
+            self.ui.hullTableWidget.setItem(line, 2, item3)
+            item4 = QtGui.QTableWidgetItem()
+            item4.setText("%0.2f" % (self.ship.getTotalVolume() * hullTypeDict[cat][1]))  # Volume
+            self.ui.hullTableWidget.setItem(line, 3, item4)
+            item5 = QtGui.QTableWidgetItem()
+            item5.setText("%0.1f" % hullTypeDict[cat][2])  # Cost Multiplier
+            self.ui.hullTableWidget.setItem(line, 4, item5)
+            item6 = QtGui.QTableWidgetItem()
+            item6.setText("%d" % (self.ship.getTotalVolume() * hullTypeDict[cat][2]))  # Cost
+            self.ui.hullTableWidget.setItem(line, 5, item6)
+            item7 = QtGui.QTableWidgetItem()
+            item7.setText("%d" % hullTypeDict[cat][3])  # Min Mass
+            self.ui.hullTableWidget.setItem(line, 6, item7)
+            item8 = QtGui.QTableWidgetItem()
+            if hullTypeDict[cat][4] is not None:
+                item8.setText("%d" % hullTypeDict[cat][4])  # Max Mass
+            else:
+                item8.setText(u"-")  # Max Mass
+            self.ui.hullTableWidget.setItem(line, 7, item8)
+            line += 1
+        if newHull is None:
+            print "ERROR: Can't find a valid Hull"  #TODO better error handling
+        else:
+            self.ship.changeHull(newHull)
+            self.ui.hullTableWidget.selectRow(newHullLine)
         
+        # Armaments Tab
+        for name in self.ship.getCannonTypeDict():
+            self.ui.cannonTypeComboBox.addItem(name)
+        for name in self.ship.getWeaponMountDict():
+            self.ui.cannonMountComboBox.addItem(name)
+        for name in self.ship.getMultipleFMDict():
+            self.ui.cannonMultipleComboBox.addItem(name)
+            
         self.on_massSpinBox_valueChanged(1)
 
     def updateMainStats(self):
@@ -75,16 +124,44 @@ class SMSDForm(QtGui.QMainWindow):
         # Update Power
         self.ship.addPower("Base", mass * 0.01)
 
+        self.updateHullTable()
+        if not self.ship.changeHull(self.ship.getHull()):
+            cat = self.ship.findValidHull()
+            if  cat is not None:
+                self.ship.changeHull(cat)
+            else:
+                print "No Valid hull!"      # TODO real error message
         self.landingGearChanged()
         self.streamlinedChanged()
         self.updatePowerStats()
         self.updateMainStats()
-    
+
+    def updateHullTable(self):
+        hullTypeDict = self.ship.getHullTypeDict()
+        line = 0
+        for cat in hullTypeDict:
+            self.ui.hullTableWidget.item(line, 3).setText("%0.2f" % (self.ship.getTotalVolume() * hullTypeDict[cat][1]))  # Volume
+            self.ui.hullTableWidget.item(line, 5).setText("%d" % (self.ship.getTotalVolume() * hullTypeDict[cat][2]))  # Cost
+            line += 1
+
     def updatePowerStats(self):
         self.ui.powerVolumeLineEdit.setText("%0.2f" % self.ship.getVolume("power"))
         self.ui.powerCostLineEdit.setText("%d" % self.ship.getCost("power"))
         if self.__powerDialog is not None:
             self.__powerDialog.updateTable(self.ship.getPowerDict())
+            
+    @QtCore.pyqtSignature("int,int,int,int")
+    def on_hullTableWidget_currentCellChanged(self, newrow, newcol, oldrow, oldcol):
+        if (newrow == oldrow):  # Same row, no change
+            return
+        #print "Cell Changed %d %d %d %d" % (newrow, newcol, oldrow, oldcol)
+        item = self.ui.hullTableWidget.item(newrow, 0)
+        cat = item.text().toInt()
+        if self.ship.changeHull(cat[0]):
+            self.updateMainStats()
+        else:
+            self.ui.hullTableWidget.selectRow(oldrow)
+            print "New hull not valid! %d" % oldrow     # TODO better error message
 
     @QtCore.pyqtSignature("")
     def on_powerDetailsPushButton_clicked(self):
@@ -94,7 +171,7 @@ class SMSDForm(QtGui.QMainWindow):
         self.__powerDialog.raise_()
 
     @QtCore.pyqtSignature("int")
-    def on_armorBeltComboBox_currentIndexChanged(self,  index):
+    def on_armorBeltComboBox_currentIndexChanged(self, index):
         self.ship.updateArmorBelt(index)
         self.ui.armorBeltCostLineEdit.setText("%d" % self.ship.getCost("Armor Belt"))
         self.updateMainStats()

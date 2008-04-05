@@ -5,7 +5,11 @@ class Ship(object):
     def __init__(self, mass=1):
         self.rulesetName = None
                 
-        self.__shipClassDict = dict()        
+        self.__shipClassDict = dict()
+        self.__hullTypeDict = dict()
+        self.__cannonTypeDict = dict()
+        self.__weaponMountDict = dict()
+        self.__multipleFMDict = dict()
         self.__mass = mass 
         self.__volume = mass * 3.0
         self.category = 1
@@ -43,6 +47,8 @@ class Ship(object):
         
         if len(self.__shipClassDict) == 0:
             print "ERROR: No ship classes"
+        if len(self.__hullTypeDict) == 0:
+            print "ERROR: No hull types"
         
         # Index: (Name, Cost Constant)
         self.__armorBeltConstant = {0:("None", 0), 1:("+5 DB and +5% HP", 100), 2:("+10 DB and +10% HP",  200),  \
@@ -55,11 +61,77 @@ class Ship(object):
                               11:52, 12:54, 13:56, 14:58, 15:60, 16:62, 17:64, 18:66, 19:68, 20:70, \
                               21:71, 22:72, 23:73, 24:74, 25:75, 26:76, 27:77, 28:78, 29:79, 30:80}
 
+#------------------------------------------------------------------------------
+# SHIP CLASS Methods
+
     def getShipClassDict(self):
         return self.__shipClassDict
     
     def addShipClass(self, category, name, min, max):
         self.__shipClassDict[category] = (name, min, max)
+
+#------------------------------------------------------------------------------
+# HULL Methods
+
+    def getHullTypeDict(self):
+        return self.__hullTypeDict
+
+    def addHullType(self, hull_cat, hull_vol, hull_cost, name, min, max):
+        #print "New Hull %d %s %f %f %d" % (hull_cat, name, hull_vol, hull_cost, min)
+        self.__hullTypeDict[hull_cat] = (name, hull_vol, hull_cost, min, max)
+
+    def getHull(self):
+        return self.__hull
+    
+    def changeHull(self, newCat):
+        if self.verifyHull(newCat):
+            self.__hull = newCat
+            self.addVolume("Hull", self.__hullTypeDict[newCat][1] * self.__volume)
+            self.addCost("Hull", self.__hullTypeDict[newCat][2] * self.__volume)
+            return True
+        else:
+            return False
+
+    def verifyHull(self, newCat = None):
+        if newCat is None:
+            newCat = self.__hull
+        # Verify newCat mass requirment
+        for cat in self.__hullTypeDict:
+            if cat == newCat and self.__mass >= self.__hullTypeDict[cat][3] and \
+                    (self.__hullTypeDict[cat][4] == "-" or self.__mass <= self.__hullTypeDict[cat][4]):
+                    return True
+        return False
+
+    def findValidHull(self):
+        for cat in self.__hullTypeDict:
+            if self.__mass >= self.__hullTypeDict[cat][3] and \
+                (self.__hullTypeDict[cat][4] == "-" or self.__mass <= self.__hullTypeDict[cat][4]):
+                return cat
+        return None
+
+#------------------------------------------------------------------------------
+# ARMAMENTS Methods
+
+    def getCannonTypeDict(self):
+        return self.__cannonTypeDict
+
+    def addCannonType(self, name, volume, basecost, costmul, minmk, maxmk, magazine):
+        self.__cannonTypeDict[name] = (volume, basecost, costmul, minmk, maxmk, magazine)
+
+    def getWeaponMountDict(self):
+        return self.__weaponMountDict
+
+    def addWeaponMount(self, name, category):
+        self.__weaponMountDict[name] = category
+
+    def getMultipleFMDict(self):
+        return self.__multipleFMDict
+
+    def addMultipleFM(self, name, volume, cost):
+        self.__multipleFMDict[name] = (volume, cost)
+
+#------------------------------------------------------------------------------
+# MASS Methods
 
     def setMass(self, mass):
         self.__mass = mass
@@ -74,11 +146,13 @@ class Ship(object):
             return
         if self.category != cat:
             self.category = cat
-            self.addVolume("power", self.getPowerRating() * (self.category ** 2 + self.getFuelCapacity() * 0.01))
-            self.addCost("power", self.getPowerRating() * (self.category ** 2) * 500 + 50000 + \
+        self.addVolume("power", self.getPowerRating() * (self.category ** 2 + self.getFuelCapacity() * 0.01))
+        self.addCost("power", self.getPowerRating() * (self.category ** 2) * 500 + 50000 + \
                                                   (self.getFuelCapacity() + self.getPowerRating()) * 10)
-            self.changeLandingGear(self.__hasLandingGear)
-        
+        self.changeLandingGear(self.__hasLandingGear)
+
+    def getMass(self):
+        return self.__mass
 
     def addVolume(self, part, volume):
         self.__volumeUsed[part] = volume

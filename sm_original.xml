@@ -49,4 +49,20 @@
     <QUALITY_TYPE factor='+25' cost='32.0'></QUALITY_TYPE>
  </QUALITY>
 </HULL>
+
+<CANNON name='Auto' volume='1' basecost='500' costmultiplier='500' minmk='6' maxmk='50'>
+    <MAGAZINE volume='0.5' basecost='0' costmultiplier='50'></MAGAZINE>
+</CANNON>
+<CANNON name='Laser' volume='1' basecost='2000' costmultiplier='600' minmk='6' maxmk='50'></CANNON>
+<CANNON name='Blast' volume='2' basecost='2000' costmultiplier='500' minmk='6' maxmk='50'></CANNON>
+<CANNON name='Disruptor' volume='4' basecost='10000' costmultiplier='700' minmk='6' maxmk='50'></CANNON>
+<CANNON name='Ion' volume='10' basecost='50000' costmultiplier='800' minmk='6' maxmk='50'></CANNON>
+<CANNON name='Plasma' volume='20' basecost='200000' costmultiplier='2000' minmk='6' maxmk='50'></CANNON>
+<WEAPON_MOUNT name='Fixed Mount' category='1'></WEAPON_MOUNT>
+<WEAPON_MOUNT name='Flexible Mount' category='2'></WEAPON_MOUNT>
+<WEAPON_MOUNT name='Turret Mount' category='3'></WEAPON_MOUNT>
+<MULTIPLE_FM name='x1' volume='1.0' cost='1.0'></MULTIPLE_FM>
+<MULTIPLE_FM name='x2' volume='2.0' cost='2.0'></MULTIPLE_FM>
+<MULTIPLE_FM name='x3' volume='3.0' cost='3.0'></MULTIPLE_FM>
+<MULTIPLE_FM name='x4' volume='4.0' cost='4.0'></MULTIPLE_FM>
 </SMSD_RULES>
