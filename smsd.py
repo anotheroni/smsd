@@ -13,7 +13,7 @@ class SMSDForm(QtGui.QMainWindow, Ui_SMSD_Form):
         self.setupUi(self)
         
         self.__powerDialog = None
-
+        
         # Connect Signals
         QtCore.QObject.connect(self.fuelStorageSpinBox,QtCore.SIGNAL("valueChanged(int)"), self.fuelStorageChanged)
         QtCore.QObject.connect(self.streamlinedCheckBox, QtCore.SIGNAL("stateChanged(int)"), self.streamlinedChanged)
@@ -82,33 +82,86 @@ class SMSDForm(QtGui.QMainWindow, Ui_SMSD_Form):
             self.ship.changeHull(newHull)
             self.hullTableWidget.selectRow(newHullLine)
         
+        # Drives Tab
+        sdtDict = self.ship.getSublightDriveTypesDict()
+        self.sublightDriveTableWidget.setRowCount(len(sdtDict))
+        line = 0
+        for rating, data in sdtDict.items():
+            item1 = QtGui.QTableWidgetItem()
+            item1.setText("%d" % rating)
+            self.sublightDriveTableWidget.setItem(line, 0, item1)
+            item2 = QtGui.QTableWidgetItem()
+            item2.setText("%0.1f" % data[0])
+            self.sublightDriveTableWidget.setItem(line, 1, item2)
+            item3 = QtGui.QTableWidgetItem()
+            item3.setText("%d" % data[1])
+            self.sublightDriveTableWidget.setItem(line, 2, item3)
+            (volume, cost) = self.ship.getSublightDriveCost(rating)
+            item4 = QtGui.QTableWidgetItem()
+            item4.setText("%0.2f" % volume)
+            self.sublightDriveTableWidget.setItem(line, 3, item4)
+            item5 = QtGui.QTableWidgetItem()
+            item5.setText("%d" % cost)
+            self.sublightDriveTableWidget.setItem(line, 4, item5)
+            line += 1
+        self.sublightDriveTableWidget.selectRow(0)  #TODO
+        
+        tdtDict = self.ship.getTranslightDriveTypesDict()
+        self.translightDriveTableWidget.setRowCount(len(tdtDict))
+        line = 0
+        for rating, data in tdtDict.items():
+            item1 = QtGui.QTableWidgetItem()
+            item1.setText("%d" % rating)
+            self.translightDriveTableWidget.setItem(line, 0, item1)
+            item2 = QtGui.QTableWidgetItem()
+            item2.setText("%0.1f" % data)
+            self.translightDriveTableWidget.setItem(line, 1, item2)
+            (volume, cost) = self.ship.getTranslightDriveCost(rating)
+            item4 = QtGui.QTableWidgetItem()
+            item4.setText("%0.2f" % volume)
+            self.translightDriveTableWidget.setItem(line, 2, item4)
+            item5 = QtGui.QTableWidgetItem()
+            item5.setText("%d" % cost)
+            self.translightDriveTableWidget.setItem(line, 3, item5)
+            line += 1
+        self.translightDriveTableWidget.selectRow(0)  #TODO
+        
         # Armaments Tab
-        for name in self.ship.getCannonTypeDict():
-            self.cannonTypeComboBox.addItem(name)
         for name in self.ship.getWeaponMountDict():
             self.cannonMountComboBox.addItem(name)
         for name in self.ship.getMultipleFMDict():
             self.cannonMultipleComboBox.addItem(name)
-            
+        for name in self.ship.getWeaponHudDict():
+            self.cannonHudComboBox.addItem(name)
+        for name in self.ship.getCannonTypeDict():
+            self.cannonTypeComboBox.addItem(name)
+        QtCore.QObject.connect(self.cannonMountComboBox, QtCore.SIGNAL("currentIndexChanged(int)"), self.updateCannonCost)
+        QtCore.QObject.connect(self.cannonMultipleComboBox, QtCore.SIGNAL("currentIndexChanged(int)"), self.updateCannonCost)
+        QtCore.QObject.connect(self.cannonMkComboBox, QtCore.SIGNAL("currentIndexChanged(int)"), self.updateCannonCost)
+        QtCore.QObject.connect(self.cannonHudComboBox, QtCore.SIGNAL("currentIndexChanged(int)"), self.updateCannonCost)
+        
         self.on_massSpinBox_valueChanged(1)
+
+#------------------------------------------------------------------------------
+# MAIN Tab
 
     def updateMainStats(self):
         percentage = (self.ship.getTotalVolume() - self.ship.getVolumeUsed()) * 100.0 / self.ship.getTotalVolume()
+        self.totalVolumeLabel.setText("Total Volume: %d Cumets" % self.ship.getTotalVolume())        
         if percentage >= 0:
             self.volumeProgressBar.setValue(percentage)
-            self.availableVolumeLabel.setText ("%0.2f of %d" % \
-             (self.ship.getTotalVolume() - self.ship.getVolumeUsed(), self.ship.getTotalVolume()))
+            self.availableVolumeLabel.setText ("Available Volume: %0.2f" % \
+                (self.ship.getTotalVolume() - self.ship.getVolumeUsed()))
         else:
             self.volumeProgressBar.setValue(0)
-            self.availableVolumeLabel.setText ("<font color=red><b>%0.2f of %d</b></font>" % \
-            (self.ship.getTotalVolume() - self.ship.getVolumeUsed(), self.ship.getTotalVolume()))
+            self.availableVolumeLabel.setText ("<font color=red><b>Available Volume: %0.2f</b></font>" % \
+                (self.ship.getTotalVolume() - self.ship.getVolumeUsed()))
         self.costLineEdit.setText ("%d" % self.ship.getTotalCost())
         self.classTableWidget.selectRow(self.ship.category - 1)  #TODO find the correct row
 
     @QtCore.pyqtSignature("int")
     def on_massSpinBox_valueChanged(self, mass):
         self.ship.setMass (mass)
-        self.volumeSpinBox.setValue (self.ship.getTotalVolume())
         
         # Armor Belt
         self.ship.updateArmorBelt(self.armorBeltComboBox.currentIndex())
@@ -133,6 +186,7 @@ class SMSDForm(QtGui.QMainWindow, Ui_SMSD_Form):
         self.landingGearChanged()
         self.streamlinedChanged()
         self.updatePowerStats()
+        self.updateControlPointStats()
         self.updateMainStats()
 
     def updateHullTable(self):
@@ -148,7 +202,10 @@ class SMSDForm(QtGui.QMainWindow, Ui_SMSD_Form):
         self.powerCostLineEdit.setText("%d" % self.ship.getCost("power"))
         if self.__powerDialog is not None:
             self.__powerDialog.updateTable(self.ship.getPowerDict())
-            
+    
+    def updateControlPointStats(self):
+        self.controlPointsLineEdit.setText("%0.1f" % self.ship.getTotalControlPoints())
+
     @QtCore.pyqtSignature("int,int,int,int")
     def on_hullTableWidget_currentCellChanged(self, newrow, newcol, oldrow, oldcol):
         if (newrow == oldrow):  # Same row, no change
@@ -162,6 +219,30 @@ class SMSDForm(QtGui.QMainWindow, Ui_SMSD_Form):
             self.hullTableWidget.selectRow(oldrow)
             print "New hull not valid! %d" % oldrow     # TODO better error message
 
+#------------------------------------------------------------------------------
+# DRIVES Tab
+
+    @QtCore.pyqtSignature("int,int,int,int")
+    def on_sublightDriveTableWidget_currentCellChanged(self, newrow, newcol, oldrow, oldcol):
+        if (newrow == oldrow):  # Same row, no change
+            return
+        item = self.sublightDriveTableWidget.item(newrow, 0)
+        rating = item.text().toInt()[0]
+        self.ship.changeSublightDrive(rating)
+        self.updatePowerStats()
+        self.updateControlPointStats()     
+        self.updateMainStats()
+
+    @QtCore.pyqtSignature("int,int,int,int")
+    def on_translightDriveTableWidget_currentCellChanged(self, newrow, newcol, oldrow, oldcol):
+        if (newrow == oldrow):  # Same row, no change
+            return
+        item = self.translightDriveTableWidget.item(newrow, 0)
+        rating = item.text().toInt()[0]
+        self.ship.changeTranslightDrive(rating)
+        self.updateControlPointStats()
+        self.updateMainStats()
+        
     @QtCore.pyqtSignature("")
     def on_powerDetailsPushButton_clicked(self):
         if self.__powerDialog is None:
@@ -186,6 +267,9 @@ class SMSDForm(QtGui.QMainWindow, Ui_SMSD_Form):
         self.updatePowerStats()
         self.updateMainStats()
 
+#------------------------------------------------------------------------------
+# SYSTEMS Tab
+
     def landingGearChanged(self):
         lgState = self.landingGearCheckBox.isChecked()
         self.ship.changeLandingGear(lgState)
@@ -201,6 +285,91 @@ class SMSDForm(QtGui.QMainWindow, Ui_SMSD_Form):
         self.deflectorCostLineEdit.setText("%d" % self.ship.getCost("deflector"))
         self.updatePowerStats()
         self.updateMainStats()
+
+#------------------------------------------------------------------------------
+# ARMAMENTS Tab
+
+    @QtCore.pyqtSignature("int")
+    def on_cannonTypeComboBox_currentIndexChanged(self, index):
+        cannonType = self.cannonTypeComboBox.itemText(index)
+        try:
+            data = self.ship.getCannonTypeDict()[cannonType]
+        except KeyError:
+            print "ERROR can't find cannon type %s" % cannonType
+            return
+        
+        # Update Mk ComboBox
+        self.cannonMkComboBox.blockSignals(True)    # Prevent signal loop
+        mkIndex = self.cannonMkComboBox.currentIndex()
+        self.cannonMkComboBox.clear() # Empty all Mk
+        for mk in range(data[3], data[4] + 1):  # MinMk, MaxMk
+            self.cannonMkComboBox.addItem(u"%d" % mk)
+        if mkIndex != -1:
+            self.cannonMkComboBox.setCurrentIndex (mkIndex)
+        self.cannonMkComboBox.blockSignals(False)
+        
+        # Update Magazine widgets
+        if data[5] is None:
+            self.cannonMagazineLabel.hide()
+            self.cannonMagazineSpinBox.hide()
+        else:
+            self.cannonMagazineLabel.show()
+            self.cannonMagazineSpinBox.show()
+        self.updateCannonCost()
+    
+    def updateCannonCost(self):
+        cType = self.cannonTypeComboBox.itemText(self.cannonTypeComboBox.currentIndex())
+        cMk = self.cannonMkComboBox.itemText(self.cannonMkComboBox.currentIndex())
+        cMount = self.cannonMountComboBox.itemText(self.cannonMountComboBox.currentIndex())
+        cMult = self.cannonMultipleComboBox.itemText(self.cannonMultipleComboBox.currentIndex())
+        cHud = self.cannonHudComboBox.itemText(self.cannonHudComboBox.currentIndex())
+        cMag = self.cannonMagazineSpinBox.value()
+        costTup = self.ship.calculateCannonCost(cType, cMk, cMount, cMult, cHud, cMag)
+        self.cannonVolumeLineEdit.setText(u"%d" % costTup[0])
+        self.cannonCostLineEdit.setText(u"%d" % costTup[1])
+        if costTup[0] == 0:
+            self.cannonAddPushButton.setEnabled(False)
+        else:
+            self.cannonAddPushButton.setEnabled(True)
+
+    @QtCore.pyqtSignature("")
+    def on_cannonAddPushButton_clicked(self):
+        cType = self.cannonTypeComboBox.itemText(self.cannonTypeComboBox.currentIndex())
+        cMk = self.cannonMkComboBox.itemText(self.cannonMkComboBox.currentIndex())
+        cMount = self.cannonMountComboBox.itemText(self.cannonMountComboBox.currentIndex())
+        cMult = self.cannonMultipleComboBox.itemText(self.cannonMultipleComboBox.currentIndex())
+        cHud = self.cannonHudComboBox.itemText(self.cannonHudComboBox.currentIndex())
+        cMag = self.cannonMagazineSpinBox.value()
+        (volume, cost) = self.ship.addCannon(cType, cMk, cMount, cMult, cHud, cMag)
+        
+        line = self.armamentsTableWidget.rowCount()
+        self.armamentsTableWidget.setRowCount(line + 1)        
+        item1 = QtGui.QTableWidgetItem()
+        item1.setText(cType)
+        self.armamentsTableWidget.setItem(line, 0, item1)
+        item2 = QtGui.QTableWidgetItem()
+        item2.setText("Mk.%s %s" % (cMk, cMult))
+        self.armamentsTableWidget.setItem(line, 1, item2)
+        item3 = QtGui.QTableWidgetItem()
+        item3.setText(cMount)
+        self.armamentsTableWidget.setItem(line, 2, item3)
+        item4 = QtGui.QTableWidgetItem()
+        item4.setText(cHud)
+        self.armamentsTableWidget.setItem(line, 3, item4)
+        item5 = QtGui.QTableWidgetItem()
+        item5.setText("%d" % volume)
+        self.armamentsTableWidget.setItem(line, 4, item5)
+        item6 = QtGui.QTableWidgetItem()
+        item6.setText("%d" % cost)
+        self.armamentsTableWidget.setItem(line, 5, item6)
+        
+        self.updatePowerStats()
+        self.updateControlPointStats()
+        self.updateMainStats()
+
+
+#------------------------------------------------------------------------------
+# FACILITIES Tab
 
     @QtCore.pyqtSignature("int")
     def on_accommodationCrewSpinBox_valueChanged(self, value):

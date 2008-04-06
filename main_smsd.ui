@@ -23,11 +23,11 @@
      </rect>
     </property>
     <property name="currentIndex" >
-     <number>3</number>
+     <number>2</number>
     </property>
     <widget class="QWidget" name="basics_tab" >
      <attribute name="title" >
-      <string>Basics</string>
+      <string>Main</string>
      </attribute>
      <widget class="QSpinBox" name="massSpinBox" >
       <property name="geometry" >
@@ -48,19 +48,6 @@
        <number>1</number>
       </property>
      </widget>
-     <widget class="QLabel" name="label" >
-      <property name="geometry" >
-       <rect>
-        <x>10</x>
-        <y>40</y>
-        <width>51</width>
-        <height>28</height>
-       </rect>
-      </property>
-      <property name="text" >
-       <string>Volume</string>
-      </property>
-     </widget>
      <widget class="QLabel" name="label_2" >
       <property name="geometry" >
        <rect>
@@ -74,22 +61,6 @@
        <string>Mass</string>
       </property>
      </widget>
-     <widget class="QSpinBox" name="volumeSpinBox" >
-      <property name="geometry" >
-       <rect>
-        <x>70</x>
-        <y>40</y>
-        <width>121</width>
-        <height>28</height>
-       </rect>
-      </property>
-      <property name="minimum" >
-       <number>3</number>
-      </property>
-      <property name="maximum" >
-       <number>27000000</number>
-      </property>
-     </widget>
      <widget class="QLabel" name="label_4" >
       <property name="geometry" >
        <rect>
@@ -101,19 +72,6 @@
       </property>
       <property name="text" >
        <string>Tons</string>
-      </property>
-     </widget>
-     <widget class="QLabel" name="label_5" >
-      <property name="geometry" >
-       <rect>
-        <x>200</x>
-        <y>40</y>
-        <width>62</width>
-        <height>31</height>
-       </rect>
-      </property>
-      <property name="text" >
-       <string>Cumets</string>
       </property>
      </widget>
      <widget class="QGroupBox" name="groupBox_2" >
@@ -175,100 +133,6 @@
       <property name="title" >
        <string>Hull</string>
       </property>
-      <widget class="QWidget" name="layoutWidget" >
-       <property name="geometry" >
-        <rect>
-         <x>12</x>
-         <y>20</y>
-         <width>468</width>
-         <height>28</height>
-        </rect>
-       </property>
-       <layout class="QHBoxLayout" >
-        <item>
-         <widget class="QLabel" name="label_7" >
-          <property name="text" >
-           <string>Superior alloy</string>
-          </property>
-         </widget>
-        </item>
-        <item>
-         <widget class="QComboBox" name="alloyDBComboBox" >
-          <item>
-           <property name="text" >
-            <string>None</string>
-           </property>
-          </item>
-          <item>
-           <property name="text" >
-            <string>DB +5 cost: 2.0</string>
-           </property>
-          </item>
-          <item>
-           <property name="text" >
-            <string>DB +10 cost: 4.0</string>
-           </property>
-          </item>
-          <item>
-           <property name="text" >
-            <string>DB +15 cost: 8.0</string>
-           </property>
-          </item>
-          <item>
-           <property name="text" >
-            <string>DB +20 cost: 16.0</string>
-           </property>
-          </item>
-          <item>
-           <property name="text" >
-            <string>DB +25 cost: 32.0</string>
-           </property>
-          </item>
-         </widget>
-        </item>
-        <item>
-         <widget class="QLabel" name="label_8" >
-          <property name="text" >
-           <string>Superior alloy</string>
-          </property>
-         </widget>
-        </item>
-        <item>
-         <widget class="QComboBox" name="alloyVFComboBox" >
-          <item>
-           <property name="text" >
-            <string>None</string>
-           </property>
-          </item>
-          <item>
-           <property name="text" >
-            <string>-10% Volume cost: 2.0</string>
-           </property>
-          </item>
-          <item>
-           <property name="text" >
-            <string>-20% Volume cost: 4.0</string>
-           </property>
-          </item>
-          <item>
-           <property name="text" >
-            <string>-40% Volume cost: 8.0</string>
-           </property>
-          </item>
-          <item>
-           <property name="text" >
-            <string>-60% Volume cost: 16.0</string>
-           </property>
-          </item>
-          <item>
-           <property name="text" >
-            <string>-80% Volume cost: 32.0</string>
-           </property>
-          </item>
-         </widget>
-        </item>
-       </layout>
-      </widget>
       <widget class="QTableWidget" name="hullTableWidget" >
        <property name="geometry" >
         <rect>
@@ -325,6 +189,112 @@
         </property>
        </column>
       </widget>
+      <widget class="QLabel" name="label_7" >
+       <property name="geometry" >
+        <rect>
+         <x>13</x>
+         <y>21</y>
+         <width>78</width>
+         <height>26</height>
+        </rect>
+       </property>
+       <property name="text" >
+        <string>Superior alloy</string>
+       </property>
+      </widget>
+      <widget class="QLabel" name="label_8" >
+       <property name="geometry" >
+        <rect>
+         <x>232</x>
+         <y>21</y>
+         <width>78</width>
+         <height>26</height>
+        </rect>
+       </property>
+       <property name="text" >
+        <string>Superior alloy</string>
+       </property>
+      </widget>
+      <widget class="QComboBox" name="alloyDBComboBox" >
+       <property name="geometry" >
+        <rect>
+         <x>97</x>
+         <y>21</y>
+         <width>129</width>
+         <height>26</height>
+        </rect>
+       </property>
+       <item>
+        <property name="text" >
+         <string>None</string>
+        </property>
+       </item>
+       <item>
+        <property name="text" >
+         <string>DB +5 cost: 2.0</string>
+        </property>
+       </item>
+       <item>
+        <property name="text" >
+         <string>DB +10 cost: 4.0</string>
+        </property>
+       </item>
+       <item>
+        <property name="text" >
+         <string>DB +15 cost: 8.0</string>
+        </property>
+       </item>
+       <item>
+        <property name="text" >
+         <string>DB +20 cost: 16.0</string>
+        </property>
+       </item>
+       <item>
+        <property name="text" >
+         <string>DB +25 cost: 32.0</string>
+        </property>
+       </item>
+      </widget>
+      <widget class="QComboBox" name="alloyVFComboBox" >
+       <property name="geometry" >
+        <rect>
+         <x>316</x>
+         <y>21</y>
+         <width>163</width>
+         <height>26</height>
+        </rect>
+       </property>
+       <item>
+        <property name="text" >
+         <string>None</string>
+        </property>
+       </item>
+       <item>
+        <property name="text" >
+         <string>-10% Volume cost: 2.0</string>
+        </property>
+       </item>
+       <item>
+        <property name="text" >
+         <string>-20% Volume cost: 4.0</string>
+        </property>
+       </item>
+       <item>
+        <property name="text" >
+         <string>-40% Volume cost: 8.0</string>
+        </property>
+       </item>
+       <item>
+        <property name="text" >
+         <string>-60% Volume cost: 16.0</string>
+        </property>
+       </item>
+       <item>
+        <property name="text" >
+         <string>-80% Volume cost: 32.0</string>
+        </property>
+       </item>
+      </widget>
      </widget>
      <widget class="QGroupBox" name="groupBox_8" >
       <property name="geometry" >
@@ -338,41 +308,47 @@
       <property name="title" >
        <string>Atmospheric Streamlining</string>
       </property>
-      <widget class="QWidget" name="layoutWidget" >
+      <widget class="QCheckBox" name="streamlinedCheckBox" >
        <property name="geometry" >
         <rect>
-         <x>10</x>
-         <y>20</y>
-         <width>237</width>
-         <height>31</height>
+         <x>11</x>
+         <y>24</y>
+         <width>88</width>
+         <height>22</height>
         </rect>
        </property>
-       <layout class="QHBoxLayout" >
-        <item>
-         <widget class="QCheckBox" name="streamlinedCheckBox" >
-          <property name="text" >
-           <string>Streamlined</string>
-          </property>
-         </widget>
-        </item>
-        <item>
-         <widget class="QLabel" name="label_15" >
-          <property name="text" >
-           <string>Cost</string>
-          </property>
-         </widget>
-        </item>
-        <item>
-         <widget class="QLineEdit" name="streamlinedCostLineEdit" >
-          <property name="enabled" >
-           <bool>false</bool>
-          </property>
-          <property name="readOnly" >
-           <bool>true</bool>
-          </property>
-         </widget>
-        </item>
-       </layout>
+       <property name="text" >
+        <string>Streamlined</string>
+       </property>
+      </widget>
+      <widget class="QLabel" name="label_15" >
+       <property name="geometry" >
+        <rect>
+         <x>105</x>
+         <y>21</y>
+         <width>25</width>
+         <height>29</height>
+        </rect>
+       </property>
+       <property name="text" >
+        <string>Cost</string>
+       </property>
+      </widget>
+      <widget class="QLineEdit" name="streamlinedCostLineEdit" >
+       <property name="enabled" >
+        <bool>false</bool>
+       </property>
+       <property name="geometry" >
+        <rect>
+         <x>136</x>
+         <y>22</y>
+         <width>110</width>
+         <height>26</height>
+        </rect>
+       </property>
+       <property name="readOnly" >
+        <bool>true</bool>
+       </property>
       </widget>
      </widget>
      <widget class="QGroupBox" name="groupBox_11" >
@@ -474,7 +450,7 @@
       <property name="title" >
        <string>Sublight Drive</string>
       </property>
-      <widget class="QTableWidget" name="tableWidget" >
+      <widget class="QTableWidget" name="sublightDriveTableWidget" >
        <property name="geometry" >
         <rect>
          <x>10</x>
@@ -483,6 +459,37 @@
          <height>311</height>
         </rect>
        </property>
+       <property name="selectionMode" >
+        <enum>QAbstractItemView::SingleSelection</enum>
+       </property>
+       <property name="selectionBehavior" >
+        <enum>QAbstractItemView::SelectRows</enum>
+       </property>
+       <column>
+        <property name="text" >
+         <string>Rating</string>
+        </property>
+       </column>
+       <column>
+        <property name="text" >
+         <string>Acceleration</string>
+        </property>
+       </column>
+       <column>
+        <property name="text" >
+         <string>MT</string>
+        </property>
+       </column>
+       <column>
+        <property name="text" >
+         <string>Volume</string>
+        </property>
+       </column>
+       <column>
+        <property name="text" >
+         <string>Cost</string>
+        </property>
+       </column>
       </widget>
      </widget>
      <widget class="QGroupBox" name="groupBox_6" >
@@ -604,6 +611,55 @@
        </property>
       </widget>
      </widget>
+     <widget class="QGroupBox" name="groupBox_13" >
+      <property name="geometry" >
+       <rect>
+        <x>360</x>
+        <y>10</y>
+        <width>351</width>
+        <height>341</height>
+       </rect>
+      </property>
+      <property name="title" >
+       <string>Translight Drive</string>
+      </property>
+      <widget class="QTableWidget" name="translightDriveTableWidget" >
+       <property name="geometry" >
+        <rect>
+         <x>10</x>
+         <y>20</y>
+         <width>331</width>
+         <height>311</height>
+        </rect>
+       </property>
+       <property name="selectionMode" >
+        <enum>QAbstractItemView::SingleSelection</enum>
+       </property>
+       <property name="selectionBehavior" >
+        <enum>QAbstractItemView::SelectRows</enum>
+       </property>
+       <column>
+        <property name="text" >
+         <string>Rating</string>
+        </property>
+       </column>
+       <column>
+        <property name="text" >
+         <string>Displacement</string>
+        </property>
+       </column>
+       <column>
+        <property name="text" >
+         <string>Volume</string>
+        </property>
+       </column>
+       <column>
+        <property name="text" >
+         <string>Cost</string>
+        </property>
+       </column>
+      </widget>
+     </widget>
     </widget>
     <widget class="QWidget" name="systems_tab" >
      <attribute name="title" >
@@ -627,7 +683,7 @@
          <x>10</x>
          <y>20</y>
          <width>174</width>
-         <height>60</height>
+         <height>71</height>
         </rect>
        </property>
        <layout class="QGridLayout" >
@@ -836,6 +892,64 @@
        </layout>
       </widget>
      </widget>
+     <widget class="QGroupBox" name="groupBox_14" >
+      <property name="geometry" >
+       <rect>
+        <x>10</x>
+        <y>240</y>
+        <width>201</width>
+        <height>211</height>
+       </rect>
+      </property>
+      <property name="title" >
+       <string>Computer</string>
+      </property>
+      <widget class="QLabel" name="label_40" >
+       <property name="geometry" >
+        <rect>
+         <x>11</x>
+         <y>14</y>
+         <width>78</width>
+         <height>26</height>
+        </rect>
+       </property>
+       <property name="text" >
+        <string>Control Points</string>
+       </property>
+      </widget>
+      <widget class="QLineEdit" name="controlPointsLineEdit" >
+       <property name="enabled" >
+        <bool>false</bool>
+       </property>
+       <property name="geometry" >
+        <rect>
+         <x>102</x>
+         <y>14</y>
+         <width>81</width>
+         <height>26</height>
+        </rect>
+       </property>
+       <property name="toolTip" >
+        <string>Ship Volume * 0.01</string>
+       </property>
+       <property name="readOnly" >
+        <bool>true</bool>
+       </property>
+      </widget>
+      <widget class="QPushButton" name="controlPointDetailsPushButton" >
+       <property name="geometry" >
+        <rect>
+         <x>10</x>
+         <y>40</y>
+         <width>75</width>
+         <height>23</height>
+        </rect>
+       </property>
+       <property name="text" >
+        <string>Details</string>
+       </property>
+      </widget>
+     </widget>
     </widget>
     <widget class="QWidget" name="armaments_tab" >
      <attribute name="title" >
@@ -853,7 +967,147 @@
       <property name="title" >
        <string>Add Cannons</string>
       </property>
-      <widget class="QPushButton" name="pushButton" >
+      <widget class="QComboBox" name="cannonTypeComboBox" >
+       <property name="geometry" >
+        <rect>
+         <x>46</x>
+         <y>22</y>
+         <width>71</width>
+         <height>26</height>
+        </rect>
+       </property>
+       <property name="minimumSize" >
+        <size>
+         <width>71</width>
+         <height>26</height>
+        </size>
+       </property>
+      </widget>
+      <widget class="QLabel" name="label_33" >
+       <property name="geometry" >
+        <rect>
+         <x>12</x>
+         <y>21</y>
+         <width>28</width>
+         <height>29</height>
+        </rect>
+       </property>
+       <property name="minimumSize" >
+        <size>
+         <width>0</width>
+         <height>26</height>
+        </size>
+       </property>
+       <property name="text" >
+        <string>Type</string>
+       </property>
+      </widget>
+      <widget class="QLabel" name="label_34" >
+       <property name="geometry" >
+        <rect>
+         <x>123</x>
+         <y>21</y>
+         <width>19</width>
+         <height>29</height>
+        </rect>
+       </property>
+       <property name="minimumSize" >
+        <size>
+         <width>0</width>
+         <height>26</height>
+        </size>
+       </property>
+       <property name="text" >
+        <string>MK</string>
+       </property>
+      </widget>
+      <widget class="QComboBox" name="cannonMkComboBox" >
+       <property name="geometry" >
+        <rect>
+         <x>148</x>
+         <y>22</y>
+         <width>71</width>
+         <height>26</height>
+        </rect>
+       </property>
+       <property name="minimumSize" >
+        <size>
+         <width>71</width>
+         <height>26</height>
+        </size>
+       </property>
+      </widget>
+      <widget class="QLabel" name="label_35" >
+       <property name="geometry" >
+        <rect>
+         <x>352</x>
+         <y>21</y>
+         <width>35</width>
+         <height>29</height>
+        </rect>
+       </property>
+       <property name="minimumSize" >
+        <size>
+         <width>0</width>
+         <height>26</height>
+        </size>
+       </property>
+       <property name="text" >
+        <string>Mount</string>
+       </property>
+      </widget>
+      <widget class="QComboBox" name="cannonMountComboBox" >
+       <property name="geometry" >
+        <rect>
+         <x>393</x>
+         <y>22</y>
+         <width>111</width>
+         <height>26</height>
+        </rect>
+       </property>
+       <property name="minimumSize" >
+        <size>
+         <width>111</width>
+         <height>26</height>
+        </size>
+       </property>
+      </widget>
+      <widget class="QLabel" name="label_36" >
+       <property name="geometry" >
+        <rect>
+         <x>225</x>
+         <y>21</y>
+         <width>44</width>
+         <height>29</height>
+        </rect>
+       </property>
+       <property name="minimumSize" >
+        <size>
+         <width>0</width>
+         <height>26</height>
+        </size>
+       </property>
+       <property name="text" >
+        <string>Multiple</string>
+       </property>
+      </widget>
+      <widget class="QComboBox" name="cannonMultipleComboBox" >
+       <property name="geometry" >
+        <rect>
+         <x>275</x>
+         <y>22</y>
+         <width>71</width>
+         <height>26</height>
+        </rect>
+       </property>
+       <property name="minimumSize" >
+        <size>
+         <width>71</width>
+         <height>26</height>
+        </size>
+       </property>
+      </widget>
+      <widget class="QPushButton" name="cannonAddPushButton" >
        <property name="geometry" >
         <rect>
          <x>10</x>
@@ -866,7 +1120,7 @@
         <string>Add</string>
        </property>
       </widget>
-      <widget class="QLabel" name="label_39" >
+      <widget class="QLabel" name="cannonMagazineLabel" >
        <property name="geometry" >
         <rect>
          <x>140</x>
@@ -888,58 +1142,44 @@
          <height>26</height>
         </rect>
        </property>
+       <property name="minimum" >
+        <number>1</number>
+       </property>
       </widget>
-      <widget class="QWidget" name="" >
+      <widget class="QLabel" name="label_39" >
        <property name="geometry" >
         <rect>
-         <x>10</x>
+         <x>510</x>
          <y>20</y>
-         <width>454</width>
-         <height>28</height>
+         <width>54</width>
+         <height>26</height>
         </rect>
        </property>
-       <layout class="QHBoxLayout" >
-        <item>
-         <widget class="QLabel" name="label_33" >
-          <property name="text" >
-           <string>Type</string>
-          </property>
-         </widget>
-        </item>
-        <item>
-         <widget class="QComboBox" name="cannonTypeComboBox" />
-        </item>
-        <item>
-         <widget class="QLabel" name="label_34" >
-          <property name="text" >
-           <string>MK</string>
-          </property>
-         </widget>
-        </item>
-        <item>
-         <widget class="QComboBox" name="cannonMkComboBox" />
-        </item>
-        <item>
-         <widget class="QLabel" name="label_35" >
-          <property name="text" >
-           <string>Mount</string>
-          </property>
-         </widget>
-        </item>
-        <item>
-         <widget class="QComboBox" name="cannonMountComboBox" />
-        </item>
-        <item>
-         <widget class="QLabel" name="label_36" >
-          <property name="text" >
-           <string>Multiple</string>
-          </property>
-         </widget>
-        </item>
-        <item>
-         <widget class="QComboBox" name="cannonMultipleComboBox" />
-        </item>
-       </layout>
+       <property name="minimumSize" >
+        <size>
+         <width>0</width>
+         <height>26</height>
+        </size>
+       </property>
+       <property name="text" >
+        <string>HUD</string>
+       </property>
+      </widget>
+      <widget class="QComboBox" name="cannonHudComboBox" >
+       <property name="geometry" >
+        <rect>
+         <x>550</x>
+         <y>20</y>
+         <width>91</width>
+         <height>26</height>
+        </rect>
+       </property>
+       <property name="minimumSize" >
+        <size>
+         <width>91</width>
+         <height>26</height>
+        </size>
+       </property>
       </widget>
       <widget class="QWidget" name="" >
        <property name="geometry" >
@@ -1000,6 +1240,42 @@
         <height>261</height>
        </rect>
       </property>
+      <property name="selectionMode" >
+       <enum>QAbstractItemView::SingleSelection</enum>
+      </property>
+      <property name="selectionBehavior" >
+       <enum>QAbstractItemView::SelectRows</enum>
+      </property>
+      <column>
+       <property name="text" >
+        <string>Type</string>
+       </property>
+      </column>
+      <column>
+       <property name="text" >
+        <string>Mk</string>
+       </property>
+      </column>
+      <column>
+       <property name="text" >
+        <string>Mount</string>
+       </property>
+      </column>
+      <column>
+       <property name="text" >
+        <string>HUD</string>
+       </property>
+      </column>
+      <column>
+       <property name="text" >
+        <string>Volume</string>
+       </property>
+      </column>
+      <column>
+       <property name="text" >
+        <string>Cost</string>
+       </property>
+      </column>
      </widget>
     </widget>
     <widget class="QWidget" name="facilities_tab" >
@@ -1018,35 +1294,13 @@
       <property name="title" >
        <string>Accommodations</string>
       </property>
-      <widget class="QLineEdit" name="recreationalVolumeLineEdit" >
-       <property name="enabled" >
-        <bool>false</bool>
-       </property>
-       <property name="geometry" >
-        <rect>
-         <x>217</x>
-         <y>220</y>
-         <width>71</width>
-         <height>20</height>
-        </rect>
-       </property>
-       <property name="maximumSize" >
-        <size>
-         <width>71</width>
-         <height>20</height>
-        </size>
-       </property>
-       <property name="readOnly" >
-        <bool>true</bool>
-       </property>
-      </widget>
       <widget class="QLineEdit" name="recreationalCostLineEdit" >
        <property name="enabled" >
         <bool>false</bool>
        </property>
        <property name="geometry" >
         <rect>
-         <x>140</x>
+         <x>220</x>
          <y>220</y>
          <width>71</width>
          <height>20</height>
@@ -1101,35 +1355,13 @@
         <string>Life Support</string>
        </property>
       </widget>
-      <widget class="QLineEdit" name="lifeSupportVolumeLineEdit" >
-       <property name="enabled" >
-        <bool>false</bool>
-       </property>
-       <property name="geometry" >
-        <rect>
-         <x>217</x>
-         <y>250</y>
-         <width>71</width>
-         <height>20</height>
-        </rect>
-       </property>
-       <property name="maximumSize" >
-        <size>
-         <width>71</width>
-         <height>20</height>
-        </size>
-       </property>
-       <property name="readOnly" >
-        <bool>true</bool>
-       </property>
-      </widget>
       <widget class="QLineEdit" name="lifeSupportCostLineEdit" >
        <property name="enabled" >
         <bool>false</bool>
        </property>
        <property name="geometry" >
         <rect>
-         <x>140</x>
+         <x>220</x>
          <y>250</y>
          <width>71</width>
          <height>20</height>
@@ -1215,19 +1447,6 @@
         <number>10000</number>
        </property>
       </widget>
-      <widget class="QLabel" name="label_23" >
-       <property name="geometry" >
-        <rect>
-         <x>218</x>
-         <y>31</y>
-         <width>71</width>
-         <height>20</height>
-        </rect>
-       </property>
-       <property name="text" >
-        <string>Volume</string>
-       </property>
-      </widget>
       <widget class="QLabel" name="label_17" >
        <property name="geometry" >
         <rect>
@@ -1260,29 +1479,7 @@
        </property>
        <property name="geometry" >
         <rect>
-         <x>141</x>
-         <y>57</y>
-         <width>71</width>
-         <height>20</height>
-        </rect>
-       </property>
-       <property name="maximumSize" >
-        <size>
-         <width>71</width>
-         <height>20</height>
-        </size>
-       </property>
-       <property name="readOnly" >
-        <bool>true</bool>
-       </property>
-      </widget>
-      <widget class="QLineEdit" name="accommodationsCrewVolumeLineEdit" >
-       <property name="enabled" >
-        <bool>false</bool>
-       </property>
-       <property name="geometry" >
-        <rect>
-         <x>218</x>
+         <x>221</x>
          <y>57</y>
          <width>71</width>
          <height>20</height>
@@ -1317,29 +1514,7 @@
        </property>
        <property name="geometry" >
         <rect>
-         <x>141</x>
-         <y>83</y>
-         <width>71</width>
-         <height>20</height>
-        </rect>
-       </property>
-       <property name="maximumSize" >
-        <size>
-         <width>71</width>
-         <height>20</height>
-        </size>
-       </property>
-       <property name="readOnly" >
-        <bool>true</bool>
-       </property>
-      </widget>
-      <widget class="QLineEdit" name="accommodationsFirstVolumeLineEdit" >
-       <property name="enabled" >
-        <bool>false</bool>
-       </property>
-       <property name="geometry" >
-        <rect>
-         <x>218</x>
+         <x>221</x>
          <y>83</y>
          <width>71</width>
          <height>20</height>
@@ -1387,29 +1562,7 @@
        </property>
        <property name="geometry" >
         <rect>
-         <x>141</x>
-         <y>109</y>
-         <width>71</width>
-         <height>20</height>
-        </rect>
-       </property>
-       <property name="maximumSize" >
-        <size>
-         <width>71</width>
-         <height>20</height>
-        </size>
-       </property>
-       <property name="readOnly" >
-        <bool>true</bool>
-       </property>
-      </widget>
-      <widget class="QLineEdit" name="accommodationsStandardVolumeLineEdit" >
-       <property name="enabled" >
-        <bool>false</bool>
-       </property>
-       <property name="geometry" >
-        <rect>
-         <x>218</x>
+         <x>221</x>
          <y>109</y>
          <width>71</width>
          <height>20</height>
@@ -1457,29 +1610,7 @@
        </property>
        <property name="geometry" >
         <rect>
-         <x>141</x>
-         <y>135</y>
-         <width>71</width>
-         <height>20</height>
-        </rect>
-       </property>
-       <property name="maximumSize" >
-        <size>
-         <width>71</width>
-         <height>20</height>
-        </size>
-       </property>
-       <property name="readOnly" >
-        <bool>true</bool>
-       </property>
-      </widget>
-      <widget class="QLineEdit" name="accommodationsLowVolumeLineEdit" >
-       <property name="enabled" >
-        <bool>false</bool>
-       </property>
-       <property name="geometry" >
-        <rect>
-         <x>218</x>
+         <x>221</x>
          <y>135</y>
          <width>71</width>
          <height>20</height>
@@ -1527,29 +1658,7 @@
        </property>
        <property name="geometry" >
         <rect>
-         <x>141</x>
-         <y>161</y>
-         <width>71</width>
-         <height>20</height>
-        </rect>
-       </property>
-       <property name="maximumSize" >
-        <size>
-         <width>71</width>
-         <height>20</height>
-        </size>
-       </property>
-       <property name="readOnly" >
-        <bool>true</bool>
-       </property>
-      </widget>
-      <widget class="QLineEdit" name="accommodationsCryogenicVolumeLineEdit" >
-       <property name="enabled" >
-        <bool>false</bool>
-       </property>
-       <property name="geometry" >
-        <rect>
-         <x>218</x>
+         <x>221</x>
          <y>161</y>
          <width>71</width>
          <height>20</height>
@@ -1578,32 +1687,10 @@
         <string>Seating</string>
        </property>
       </widget>
-      <widget class="QLineEdit" name="accommodationsSeatingVolumeLineEdit" >
-       <property name="enabled" >
-        <bool>false</bool>
-       </property>
-       <property name="geometry" >
-        <rect>
-         <x>218</x>
-         <y>187</y>
-         <width>71</width>
-         <height>20</height>
-        </rect>
-       </property>
-       <property name="maximumSize" >
-        <size>
-         <width>71</width>
-         <height>20</height>
-        </size>
-       </property>
-       <property name="readOnly" >
-        <bool>true</bool>
-       </property>
-      </widget>
       <widget class="QLabel" name="label_22" >
        <property name="geometry" >
         <rect>
-         <x>141</x>
+         <x>221</x>
          <y>31</y>
          <width>71</width>
          <height>20</height>
@@ -1619,7 +1706,7 @@
        </property>
        <property name="geometry" >
         <rect>
-         <x>141</x>
+         <x>221</x>
          <y>187</y>
          <width>71</width>
          <height>20</height>
@@ -1648,6 +1735,195 @@
         <number>10000</number>
        </property>
       </widget>
+      <widget class="QLineEdit" name="recreationalVolumeLineEdit" >
+       <property name="enabled" >
+        <bool>false</bool>
+       </property>
+       <property name="geometry" >
+        <rect>
+         <x>140</x>
+         <y>220</y>
+         <width>71</width>
+         <height>20</height>
+        </rect>
+       </property>
+       <property name="maximumSize" >
+        <size>
+         <width>71</width>
+         <height>20</height>
+        </size>
+       </property>
+       <property name="readOnly" >
+        <bool>true</bool>
+       </property>
+      </widget>
+      <widget class="QLabel" name="label_23" >
+       <property name="geometry" >
+        <rect>
+         <x>141</x>
+         <y>31</y>
+         <width>71</width>
+         <height>20</height>
+        </rect>
+       </property>
+       <property name="text" >
+        <string>Volume</string>
+       </property>
+      </widget>
+      <widget class="QLineEdit" name="lifeSupportVolumeLineEdit" >
+       <property name="enabled" >
+        <bool>false</bool>
+       </property>
+       <property name="geometry" >
+        <rect>
+         <x>140</x>
+         <y>250</y>
+         <width>71</width>
+         <height>20</height>
+        </rect>
+       </property>
+       <property name="maximumSize" >
+        <size>
+         <width>71</width>
+         <height>20</height>
+        </size>
+       </property>
+       <property name="readOnly" >
+        <bool>true</bool>
+       </property>
+      </widget>
+      <widget class="QLineEdit" name="accommodationsLowVolumeLineEdit" >
+       <property name="enabled" >
+        <bool>false</bool>
+       </property>
+       <property name="geometry" >
+        <rect>
+         <x>141</x>
+         <y>135</y>
+         <width>71</width>
+         <height>20</height>
+        </rect>
+       </property>
+       <property name="maximumSize" >
+        <size>
+         <width>71</width>
+         <height>20</height>
+        </size>
+       </property>
+       <property name="readOnly" >
+        <bool>true</bool>
+       </property>
+      </widget>
+      <widget class="QLineEdit" name="accommodationsStandardVolumeLineEdit" >
+       <property name="enabled" >
+        <bool>false</bool>
+       </property>
+       <property name="geometry" >
+        <rect>
+         <x>141</x>
+         <y>109</y>
+         <width>71</width>
+         <height>20</height>
+        </rect>
+       </property>
+       <property name="maximumSize" >
+        <size>
+         <width>71</width>
+         <height>20</height>
+        </size>
+       </property>
+       <property name="readOnly" >
+        <bool>true</bool>
+       </property>
+      </widget>
+      <widget class="QLineEdit" name="accommodationsSeatingVolumeLineEdit" >
+       <property name="enabled" >
+        <bool>false</bool>
+       </property>
+       <property name="geometry" >
+        <rect>
+         <x>141</x>
+         <y>187</y>
+         <width>71</width>
+         <height>20</height>
+        </rect>
+       </property>
+       <property name="maximumSize" >
+        <size>
+         <width>71</width>
+         <height>20</height>
+        </size>
+       </property>
+       <property name="readOnly" >
+        <bool>true</bool>
+       </property>
+      </widget>
+      <widget class="QLineEdit" name="accommodationsCrewVolumeLineEdit" >
+       <property name="enabled" >
+        <bool>false</bool>
+       </property>
+       <property name="geometry" >
+        <rect>
+         <x>141</x>
+         <y>57</y>
+         <width>71</width>
+         <height>20</height>
+        </rect>
+       </property>
+       <property name="maximumSize" >
+        <size>
+         <width>71</width>
+         <height>20</height>
+        </size>
+       </property>
+       <property name="readOnly" >
+        <bool>true</bool>
+       </property>
+      </widget>
+      <widget class="QLineEdit" name="accommodationsFirstVolumeLineEdit" >
+       <property name="enabled" >
+        <bool>false</bool>
+       </property>
+       <property name="geometry" >
+        <rect>
+         <x>141</x>
+         <y>83</y>
+         <width>71</width>
+         <height>20</height>
+        </rect>
+       </property>
+       <property name="maximumSize" >
+        <size>
+         <width>71</width>
+         <height>20</height>
+        </size>
+       </property>
+       <property name="readOnly" >
+        <bool>true</bool>
+       </property>
+      </widget>
+      <widget class="QLineEdit" name="accommodationsCryogenicVolumeLineEdit" >
+       <property name="enabled" >
+        <bool>false</bool>
+       </property>
+       <property name="geometry" >
+        <rect>
+         <x>141</x>
+         <y>161</y>
+         <width>71</width>
+         <height>20</height>
+        </rect>
+       </property>
+       <property name="maximumSize" >
+        <size>
+         <width>71</width>
+         <height>20</height>
+        </size>
+       </property>
+       <property name="readOnly" >
+        <bool>true</bool>
+       </property>
+      </widget>
      </widget>
     </widget>
    </widget>
@@ -1663,7 +1939,7 @@
     <property name="title" >
      <string>Ship</string>
     </property>
-    <widget class="QLabel" name="label_3" >
+    <widget class="QLabel" name="totalVolumeLabel" >
      <property name="geometry" >
       <rect>
        <x>10</x>
@@ -1673,14 +1949,14 @@
       </rect>
      </property>
      <property name="text" >
-      <string>Available Volume</string>
+      <string>Total Volume</string>
      </property>
     </widget>
     <widget class="QProgressBar" name="volumeProgressBar" >
      <property name="geometry" >
       <rect>
        <x>10</x>
-       <y>40</y>
+       <y>70</y>
        <width>121</width>
        <height>26</height>
       </rect>
@@ -1725,13 +2001,13 @@
      <property name="geometry" >
       <rect>
        <x>10</x>
-       <y>70</y>
-       <width>121</width>
+       <y>40</y>
+       <width>181</width>
        <height>21</height>
       </rect>
      </property>
      <property name="text" >
-      <string>volume / volume</string>
+      <string>Available Volume</string>
      </property>
     </widget>
     <widget class="QLabel" name="rulesetNameLabel" >

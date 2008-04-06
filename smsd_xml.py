@@ -36,7 +36,16 @@ class SaxSMSDRulesHandler(QXmlDefaultHandler):
                 max = [sys.maxint]
             else:
                 max = max.toInt()
-            self.ship.addShipClass(cat[0], attributes.value("name"), min[0], max[0])
+            self.ship.addShipClass(cat[0], attributes.value("name"), min[0], max[0], \
+                attributes.value("sublight_vol_mult").toFloat()[0], \
+                attributes.value("sublight_vol_base").toInt()[0], \
+                attributes.value("sublight_cost_mult").toInt()[0], \
+                attributes.value("sublight_cost_base").toInt()[0], \
+                attributes.value("translight_vol_mult").toFloat()[0], \
+                attributes.value("translight_vol_base").toInt()[0], \
+                attributes.value("translight_cost_mult").toInt()[0], \
+                attributes.value("translight_cost_base").toInt()[0])
+            
         elif qName =="HULL":
             self.__mode = "hull"
         elif qName == "HULL_TYPE":
@@ -51,15 +60,25 @@ class SaxSMSDRulesHandler(QXmlDefaultHandler):
             self.__text = QtCore.QString()
         elif qName == "MAX_LIMIT":
             self.__text = QtCore.QString()
+            
+        elif qName == "SUBLIGHT_DRIVE":
+            self.ship.addSublightDriveType(attributes.value("rating").toInt()[0], \
+                attributes.value("acceleration").toFloat()[0], \
+                attributes.value("mt").toInt()[0])
+        
+        elif qName == "TRANSLIGHT_DRIVE":
+            self.ship.addTranslightType(attributes.value("rating").toInt()[0], \
+                attributes.value("displacement").toFloat()[0])
+        
         elif qName == "CANNON":
             self.__mode = "cannon"
             self.__magazine = None
             self.__cannon_name = attributes.value("name")
-            self.__cannon_volume = attributes.value("volume").toFloat()
-            self.__cannon_basecost = attributes.value("basecost").toInt()
-            self.__cannon_costmul = attributes.value("costmultiplier").toInt()
-            self.__cannon_minmk = attributes.value("minmk").toInt()
-            self.__cannon_maxmk = attributes.value("maxmk").toInt()
+            self.__cannon_volume = attributes.value("volume").toFloat()[0]  #TODO new function that throws an exception
+            self.__cannon_basecost = attributes.value("basecost").toInt()[0]
+            self.__cannon_costmul = attributes.value("costmultiplier").toInt()[0]
+            self.__cannon_minmk = attributes.value("minmk").toInt()[0]
+            self.__cannon_maxmk = attributes.value("maxmk").toInt()[0]
             if self.__cannon_maxmk < self.__cannon_minmk:
                 print "ERROR: MinMK > MaxMK"    #TODO
         elif qName == "MAGAZINE":
@@ -67,13 +86,24 @@ class SaxSMSDRulesHandler(QXmlDefaultHandler):
                 print "MAGAZINE outside of CANNON tag"  #TODO better error handling
             else:
                 self.__magazine = {"name":attributes.value("name"), \
-                    "basecost":attributes.value("basecost").toFloat(), \
-                    "costmultiplier":attributes.value("costmultiplier").toFloat()}
+                    "basecost":attributes.value("basecost").toFloat()[0], \
+                    "costmultiplier":attributes.value("costmultiplier").toFloat()[0]}
         elif qName == "WEAPON_MOUNT":
-            self.ship.addWeaponMount(attributes.value("name"), attributes.value("category").toInt())
+            self.ship.addWeaponMount(attributes.value("name"), \
+                attributes.value("category").toInt()[0], \
+                attributes.value("volume").toFloat()[0], \
+                attributes.value("basecost").toInt()[0])
         elif qName == "MULTIPLE_FM":
             self.ship.addMultipleFM(attributes.value("name"), \
-                attributes.value("volume").toFloat(), attributes.value("cost").toFloat())
+                attributes.value("volume").toFloat()[0], attributes.value("cost").toFloat()[0])
+        elif qName == "CANNON_CATEGORY":
+            self.ship.addCannonCategory(attributes.value("name"), \
+                attributes.value("costmultiplier").toFloat()[0], \
+                attributes.value("minmk").toInt()[0], \
+                attributes.value("maxmk").toInt()[0])
+        elif qName == "WEAPON_HUD":
+            self.ship.addWeaponHud(attributes.value("name"), \
+                attributes.value("cost").toInt()[0])
                 
         return True
     

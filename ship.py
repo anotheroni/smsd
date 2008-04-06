@@ -1,4 +1,5 @@
 from PyQt4 import QtXml, QtCore
+from math import sqrt
 from smsd_xml import SaxSMSDRulesHandler
 
 class Ship(object):
@@ -7,19 +8,26 @@ class Ship(object):
                 
         self.__shipClassDict = dict()
         self.__hullTypeDict = dict()
+        self.__sublightDriveTypesDict = dict()
+        self.__translightDriveTypesDict = dict()
         self.__cannonTypeDict = dict()
         self.__weaponMountDict = dict()
         self.__multipleFMDict = dict()
-        self.__mass = mass 
+        self.__cannonCategoryDict = dict()
+        self.__weaponHudDict = dict()
+        self.__mass = mass
         self.__volume = mass * 3.0
         self.category = 1
-        self.__volumeUsed = dict() 
+        self.__volumeUsed = dict()
         self.__cost = dict()
         self.__power = dict()
+        self.__controlPoints = dict()
         self.__hull = 21
         self.__armorBelt = 0
-        self.__sublightDriveRating = 1
+        self.__sublightDriveRating = 0
         self.__translightDriveRating = 0
+        self.__cannonCounter = 0
+        self.__cannons = dict()
         self.__tractorBeams = dict()
         self.__deflectorScreen= [0, 0]  # Rating, Bonus
         self.__fuelCapacity = 1
@@ -67,8 +75,12 @@ class Ship(object):
     def getShipClassDict(self):
         return self.__shipClassDict
     
-    def addShipClass(self, category, name, min, max):
-        self.__shipClassDict[category] = (name, min, max)
+    # svm = Sublight Drive Volume Multiplier
+    # scb = Sublight Drive Base Cost
+    # tvb = Translight Drive Base Volume
+    # tcm = Translight Drive Cost Multiplier
+    def addShipClass(self, category, name, min, max, svm, svb, scm, scb, tvm, tvb, tcm, tcb):
+        self.__shipClassDict[category] = (name, min, max, svm, svb, scm, scb, tvm, tvb, tcm, tcb)
 
 #------------------------------------------------------------------------------
 # HULL Methods
@@ -110,6 +122,62 @@ class Ship(object):
         return None
 
 #------------------------------------------------------------------------------
+# DRIVES Methods
+
+    def addSublightDriveType(self, rating, acceleration, mt):
+        self.__sublightDriveTypesDict[rating] = (acceleration, mt)
+
+    def getSublightDriveTypesDict(self):
+        return self.__sublightDriveTypesDict
+
+    def getSublightDriveCost(self, rating):
+        if rating == 0:
+            svb = 0
+            scb = 0
+        else:
+            svb = self.__shipClassDict[self.category][4]
+            scb = self.__shipClassDict[self.category][6]
+        #(name, min, max, svm, svb, scm, scb, tvm, tvb, tcm, tcb)
+        volume = self.__volume * self.__shipClassDict[self.category][3] * \
+                rating + svb
+        cost = self.__mass * self.__shipClassDict[self.category][5] * rating + scb
+        return (volume, cost)
+
+    def changeSublightDrive(self, rating):
+        self.__sublightDriveRating = rating
+        (volume, cost) = self.getSublightDriveCost(rating)
+        self.addVolume("Sublight Drive", volume)
+        self.addCost("Sublight Drive", cost)
+        self.addPower("Sublight Drive", rating)
+        self.addControlPoint("Sublight Drive", rating)
+
+    def addTranslightType(self, rating, displacement):
+        self.__translightDriveTypesDict[rating] = displacement
+
+    def getTranslightDriveTypesDict(self):
+        return self.__translightDriveTypesDict
+
+    def getTranslightDriveCost(self, rating):
+        if rating == 0:
+            tvb = 0
+            tcb = 0
+        else:
+            tvb = self.__shipClassDict[self.category][8]
+            tcb = self.__shipClassDict[self.category][10]
+        #(name, min, max, svm, svb, scm, scb, tvm, tvb, tcm, tcb)
+        volume = self.__volume * self.__shipClassDict[self.category][7] * \
+                rating + tvb
+        cost = self.__mass * self.__shipClassDict[self.category][9] * rating + tcb
+        return (volume, cost)
+    
+    def changeTranslightDrive(self, rating):
+        self.__translightDriveRating = rating
+        (volume, cost) = self.getTranslightDriveCost(rating)
+        self.addVolume("Translight Drive", volume)
+        self.addCost("Translight Drive", cost)
+        self.addControlPoint("Translight Drive", rating)
+
+#------------------------------------------------------------------------------
 # ARMAMENTS Methods
 
     def getCannonTypeDict(self):
@@ -121,14 +189,79 @@ class Ship(object):
     def getWeaponMountDict(self):
         return self.__weaponMountDict
 
-    def addWeaponMount(self, name, category):
-        self.__weaponMountDict[name] = category
+    def addWeaponMount(self, name, category, volume, basecost):
+        self.__weaponMountDict[name] = (category, volume, basecost)
 
     def getMultipleFMDict(self):
         return self.__multipleFMDict
 
     def addMultipleFM(self, name, volume, cost):
         self.__multipleFMDict[name] = (volume, cost)
+
+    def addCannonCategory(self, name, costmultiplier, minmk, maxmk):
+        self.__cannonCategoryDict[name] = (costmultiplier, minmk, maxmk)
+
+    def addWeaponHud(self, name, cost):
+        self.__weaponHudDict[name] = cost
+    
+    def getWeaponHudDict(self):
+        return self.__weaponHudDict
+
+    def calculateCannonCost(self, cType, cMk, cMount, cMult, cHud, cMag):
+        cost = 0
+        volume = 0
+        mk = cMk.toInt()[0]
+        for name, data in self.__cannonCategoryDict.items():
+            if mk >= data[1] and mk <= data[2]: # minMk and maxMk
+                catMul = data[0]
+                break
+        else:
+            print "ERROR: no matching category" # TODO
+            catMul = 1000.0
+        
+        try:
+            volMul = self.__cannonTypeDict[cType][0]
+            baseCost = self.__cannonTypeDict[cType][1]
+            costMul = self.__cannonTypeDict[cType][2]
+            magazine = self.__cannonTypeDict[cType][5]
+        except KeyError:
+            print "ERROR: CannonType key %s doesn't exist" % cType  # TODO
+            return (0, 0)
+        
+        try:
+            mountVolMul = self.__weaponMountDict[cMount][1]
+            mountBaseCost = self.__weaponMountDict[cMount][2]
+        except KeyError:
+            print "ERROR: MountType key %s doesn't exist" % cMount  # TODO
+            return (0, 0)
+        
+        try:
+            multiVolMul = self.__multipleFMDict[cMult][0]
+            multiCostMul = self.__multipleFMDict[cMult][1]
+        except KeyError:
+            print "ERROR: MultipleMP key %s doesn't exist" % cMult  # TODO
+            return (0, 0)
+        
+        try:
+            hudCost = self.__weaponHudDict[cHud]
+        except KeyError:
+            print "ERROR: HUD key %s doesn't exist" % cHud  # TODO
+            return (0, 0)
+        
+        cost = ((mk * costMul + baseCost) * catMul + mountBaseCost) * multiCostMul + hudCost
+        volume = mk * catMul * volMul * mountVolMul * multiVolMul
+        
+        return (volume, cost)
+    
+    def addCannon(self, cType, cMk, cMount, cMult, cHud, cMag):
+        self.__cannonCounter += 1
+        self.__cannons[self.__cannonCounter] = (cType, cMk, cMount, cMult, cHud, cMag)
+        (volume, cost) = self.calculateCannonCost(cType, cMk, cMount, cMult, cHud, cMag)
+        self.addVolume("Cannon_%d" % self.__cannonCounter, volume)
+        self.addCost("Cannon_%d" % self.__cannonCounter, cost)
+        self.addPower("Cannon_%d" % self.__cannonCounter, cMk.toInt()[0])
+        self.addControlPoint("Weapon Mounts", len(self.__cannons))
+        return (volume, cost)
 
 #------------------------------------------------------------------------------
 # MASS Methods
@@ -149,10 +282,14 @@ class Ship(object):
         self.addVolume("power", self.getPowerRating() * (self.category ** 2 + self.getFuelCapacity() * 0.01))
         self.addCost("power", self.getPowerRating() * (self.category ** 2) * 500 + 50000 + \
                                                   (self.getFuelCapacity() + self.getPowerRating()) * 10)
+        self.addControlPoint("Base", self.__mass * 0.01) 
         self.changeLandingGear(self.__hasLandingGear)
 
     def getMass(self):
         return self.__mass
+
+#------------------------------------------------------------------------------
+# VOLUME Methods
 
     def addVolume(self, part, volume):
         self.__volumeUsed[part] = volume
@@ -177,6 +314,9 @@ class Ship(object):
             usedVol += vol
         return usedVol
 
+#------------------------------------------------------------------------------
+# COST Methods
+
     def addCost (self, part, cost):
         self.__cost[part] = cost
         
@@ -195,6 +335,9 @@ class Ship(object):
         for cost in self.__cost.values():
             totalCost += cost
         return totalCost
+
+#------------------------------------------------------------------------------
+# POWER Methods
 
     def addPower(self, part, power):
         self.__power[part] = power
@@ -229,6 +372,29 @@ class Ship(object):
         self.addVolume("power", self.getPowerRating() * (self.category ** 2 + self.getFuelCapacity() * 0.01))
         self.addCost("power", self.getPowerRating() * (self.category ** 2) * 500 + 50000 + \
                                                   (self.getFuelCapacity() + self.getPowerRating()) * 10)
+
+#------------------------------------------------------------------------------
+# CONTROL POINTS Methods
+
+    def addControlPoint(self, part, points):
+        self.__controlPoints[part] = points
+
+    def removeControlPoint(self, part):
+        try:
+            del self.__controlPoints[part]
+        except KeyError: pass
+    
+    def getControlPointDict(self):
+        return self.__controlPoints
+
+    def getTotalControlPoints(self):
+        total = 0
+        for name, points in self.__controlPoints.items():
+            total += points
+        return sqrt(total)
+
+#------------------------------------------------------------------------------
+# MISC Methods
 
     def updateArmorBelt(self, index):
         self.__armorBelt = index
@@ -277,7 +443,10 @@ class Ship(object):
             return "%d" % self.__cost["Streamlined"]
         else:
             return ""
-            
+
+#------------------------------------------------------------------------------
+# FACILITIES Methods
+
     def addAccommodations(self, type, number):
         self.__accommodations[type] = number
         constants = self.__accommodationsConstant[type]

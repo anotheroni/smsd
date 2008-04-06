@@ -4,10 +4,11 @@
 <NAME>Space Master - Star Strike Ruleset</NAME>
 <DESC>The ruleset created by ICE for Star Strike</DESC>
 # Use '+' to indicate no limit
-<SHIP_CLASS category='1' min_mass='1' max_mass='999' name='Small'></SHIP_CLASS>
-<SHIP_CLASS category='2' min_mass='1000' max_mass='99999' name='Medium'></SHIP_CLASS>
-<SHIP_CLASS category='3' min_mass='100000' max_mass='999999' name='Large'></SHIP_CLASS>
-<SHIP_CLASS category='4' min_mass='1000000' max_mass='+' name='Super Large'></SHIP_CLASS>
+# Sublight Drive Base cost and volume is ignored for drive rating 0
+<SHIP_CLASS category='1' name='Small' min_mass='1' max_mass='999' sublight_vol_mult='0.01' sublight_vol_base='50' sublight_cost_mult='15' sublight_cost_base='30000' translight_vol_mult='0.02' translight_vol_base='50' translight_cost_mult='30' translight_cost_base='100000'></SHIP_CLASS>
+<SHIP_CLASS category='2' name='Medium' min_mass='1000' max_mass='99999' sublight_vol_mult='0.02' sublight_vol_base='250' sublight_cost_mult='15' sublight_cost_base='30000' translight_vol_mult='0.02' translight_vol_base='50' translight_cost_mult='30' translight_cost_base='100000'></SHIP_CLASS>
+<SHIP_CLASS category='3' name='Large' min_mass='100000' max_mass='999999' sublight_vol_mult='0.04' sublight_vol_base='1250' sublight_cost_mult='15' sublight_cost_base='30000' translight_vol_mult='0.02' translight_vol_base='50' translight_cost_mult='30' translight_cost_base='100000'></SHIP_CLASS>
+<SHIP_CLASS category='4' name='Super Large' min_mass='1000000' max_mass='+' sublight_vol_mult='0.10' sublight_vol_base='6250' sublight_cost_mult='15' sublight_cost_base='30000' translight_vol_mult='0.02' translight_vol_base='50' translight_cost_mult='30' translight_cost_base='100000'></SHIP_CLASS>
 
 <HULL>
  #MIN_LIMIT = Minimum weight to use hull
@@ -50,6 +51,82 @@
  </QUALITY>
 </HULL>
 
+# Sublight Drive Base cost and volume is ignored for drive rating 0
+<SUBLIGHT_DRIVE rating='0'  acceleration='0.0'   mt='0'></SUBLIGHT_DRIVE>
+<SUBLIGHT_DRIVE rating='1'  acceleration='10.0'  mt='1'></SUBLIGHT_DRIVE>
+<SUBLIGHT_DRIVE rating='2'  acceleration='20.0'  mt='2'></SUBLIGHT_DRIVE>
+<SUBLIGHT_DRIVE rating='3'  acceleration='30.0'  mt='3'></SUBLIGHT_DRIVE>
+<SUBLIGHT_DRIVE rating='4'  acceleration='40.0'  mt='4'></SUBLIGHT_DRIVE>
+<SUBLIGHT_DRIVE rating='5'  acceleration='50.0'  mt='5'></SUBLIGHT_DRIVE>
+<SUBLIGHT_DRIVE rating='6'  acceleration='60.0'  mt='6'></SUBLIGHT_DRIVE>
+<SUBLIGHT_DRIVE rating='7'  acceleration='70.0'  mt='7'></SUBLIGHT_DRIVE>
+<SUBLIGHT_DRIVE rating='8'  acceleration='80.0'  mt='8'></SUBLIGHT_DRIVE>
+<SUBLIGHT_DRIVE rating='9'  acceleration='90.0'  mt='9'></SUBLIGHT_DRIVE>
+<SUBLIGHT_DRIVE rating='10' acceleration='100.0' mt='10'></SUBLIGHT_DRIVE>
+<SUBLIGHT_DRIVE rating='11' acceleration='105.0' mt='11'></SUBLIGHT_DRIVE>
+<SUBLIGHT_DRIVE rating='12' acceleration='110.0' mt='11'></SUBLIGHT_DRIVE>
+<SUBLIGHT_DRIVE rating='13' acceleration='115.0' mt='12'></SUBLIGHT_DRIVE>
+<SUBLIGHT_DRIVE rating='14' acceleration='120.0' mt='12'></SUBLIGHT_DRIVE>
+<SUBLIGHT_DRIVE rating='15' acceleration='125.0' mt='13'></SUBLIGHT_DRIVE>
+<SUBLIGHT_DRIVE rating='16' acceleration='130.0' mt='13'></SUBLIGHT_DRIVE>
+<SUBLIGHT_DRIVE rating='17' acceleration='135.0' mt='14'></SUBLIGHT_DRIVE>
+<SUBLIGHT_DRIVE rating='18' acceleration='140.0' mt='14'></SUBLIGHT_DRIVE>
+<SUBLIGHT_DRIVE rating='19' acceleration='145.0' mt='15'></SUBLIGHT_DRIVE>
+<SUBLIGHT_DRIVE rating='20' acceleration='150.0' mt='15'></SUBLIGHT_DRIVE>
+<SUBLIGHT_DRIVE rating='21' acceleration='152.5' mt='15'></SUBLIGHT_DRIVE>
+<SUBLIGHT_DRIVE rating='22' acceleration='155.0' mt='16'></SUBLIGHT_DRIVE>
+<SUBLIGHT_DRIVE rating='23' acceleration='157.5' mt='16'></SUBLIGHT_DRIVE>
+<SUBLIGHT_DRIVE rating='24' acceleration='160.0' mt='16'></SUBLIGHT_DRIVE>
+<SUBLIGHT_DRIVE rating='25' acceleration='162.5' mt='16'></SUBLIGHT_DRIVE>
+<SUBLIGHT_DRIVE rating='26' acceleration='165.0' mt='17'></SUBLIGHT_DRIVE>
+<SUBLIGHT_DRIVE rating='27' acceleration='167.5' mt='17'></SUBLIGHT_DRIVE>
+<SUBLIGHT_DRIVE rating='28' acceleration='170.0' mt='17'></SUBLIGHT_DRIVE>
+<SUBLIGHT_DRIVE rating='29' acceleration='172.5' mt='17'></SUBLIGHT_DRIVE>
+<SUBLIGHT_DRIVE rating='30' acceleration='175.0' mt='18'></SUBLIGHT_DRIVE>
+<SUBLIGHT_DRIVE rating='31' acceleration='176.0' mt='18'></SUBLIGHT_DRIVE>
+<SUBLIGHT_DRIVE rating='32' acceleration='177.0' mt='18'></SUBLIGHT_DRIVE>
+<SUBLIGHT_DRIVE rating='33' acceleration='178.0' mt='18'></SUBLIGHT_DRIVE>
+<SUBLIGHT_DRIVE rating='34' acceleration='179.0' mt='18'></SUBLIGHT_DRIVE>
+<SUBLIGHT_DRIVE rating='35' acceleration='180.0' mt='18'></SUBLIGHT_DRIVE>
+<SUBLIGHT_DRIVE rating='36' acceleration='181.0' mt='18'></SUBLIGHT_DRIVE>
+<SUBLIGHT_DRIVE rating='37' acceleration='182.0' mt='18'></SUBLIGHT_DRIVE>
+<SUBLIGHT_DRIVE rating='38' acceleration='183.0' mt='18'></SUBLIGHT_DRIVE>
+<SUBLIGHT_DRIVE rating='39' acceleration='184.0' mt='18'></SUBLIGHT_DRIVE>
+<SUBLIGHT_DRIVE rating='40' acceleration='185.0' mt='19'></SUBLIGHT_DRIVE>
+
+# Translight Drive Base cost and volume is ignored for drive rating 0
+<TRANSLIGHT_DRIVE rating='0' displacement='0.0'></TRANSLIGHT_DRIVE>
+<TRANSLIGHT_DRIVE rating='1' displacement='1.0'></TRANSLIGHT_DRIVE>
+<TRANSLIGHT_DRIVE rating='2' displacement='2.0'></TRANSLIGHT_DRIVE>
+<TRANSLIGHT_DRIVE rating='3' displacement='3.0'></TRANSLIGHT_DRIVE>
+<TRANSLIGHT_DRIVE rating='4' displacement='4.0'></TRANSLIGHT_DRIVE>
+<TRANSLIGHT_DRIVE rating='5' displacement='5.0'></TRANSLIGHT_DRIVE>
+<TRANSLIGHT_DRIVE rating='6' displacement='6.0'></TRANSLIGHT_DRIVE>
+<TRANSLIGHT_DRIVE rating='7' displacement='7.0'></TRANSLIGHT_DRIVE>
+<TRANSLIGHT_DRIVE rating='8' displacement='8.0'></TRANSLIGHT_DRIVE>
+<TRANSLIGHT_DRIVE rating='9' displacement='9.0'></TRANSLIGHT_DRIVE>
+<TRANSLIGHT_DRIVE rating='10' displacement='10.0'></TRANSLIGHT_DRIVE>
+<TRANSLIGHT_DRIVE rating='11' displacement='10.5'></TRANSLIGHT_DRIVE>
+<TRANSLIGHT_DRIVE rating='12' displacement='11.0'></TRANSLIGHT_DRIVE>
+<TRANSLIGHT_DRIVE rating='13' displacement='11.5'></TRANSLIGHT_DRIVE>
+<TRANSLIGHT_DRIVE rating='14' displacement='12.0'></TRANSLIGHT_DRIVE>
+<TRANSLIGHT_DRIVE rating='15' displacement='12.5'></TRANSLIGHT_DRIVE>
+<TRANSLIGHT_DRIVE rating='16' displacement='13.0'></TRANSLIGHT_DRIVE>
+<TRANSLIGHT_DRIVE rating='17' displacement='13.5'></TRANSLIGHT_DRIVE>
+<TRANSLIGHT_DRIVE rating='18' displacement='14.0'></TRANSLIGHT_DRIVE>
+<TRANSLIGHT_DRIVE rating='19' displacement='14.5'></TRANSLIGHT_DRIVE>
+<TRANSLIGHT_DRIVE rating='20' displacement='15.0'></TRANSLIGHT_DRIVE>
+<TRANSLIGHT_DRIVE rating='21' displacement='15.25'></TRANSLIGHT_DRIVE>
+<TRANSLIGHT_DRIVE rating='22' displacement='15.5'></TRANSLIGHT_DRIVE>
+<TRANSLIGHT_DRIVE rating='23' displacement='15.75'></TRANSLIGHT_DRIVE>
+<TRANSLIGHT_DRIVE rating='24' displacement='16.0'></TRANSLIGHT_DRIVE>
+<TRANSLIGHT_DRIVE rating='25' displacement='16.25'></TRANSLIGHT_DRIVE>
+<TRANSLIGHT_DRIVE rating='26' displacement='16.5'></TRANSLIGHT_DRIVE>
+<TRANSLIGHT_DRIVE rating='27' displacement='16.75'></TRANSLIGHT_DRIVE>
+<TRANSLIGHT_DRIVE rating='28' displacement='17.0'></TRANSLIGHT_DRIVE>
+<TRANSLIGHT_DRIVE rating='29' displacement='17.25'></TRANSLIGHT_DRIVE>
+<TRANSLIGHT_DRIVE rating='30' displacement='17.5'></TRANSLIGHT_DRIVE>
+
 <CANNON name='Auto' volume='1' basecost='500' costmultiplier='500' minmk='6' maxmk='50'>
     <MAGAZINE volume='0.5' basecost='0' costmultiplier='50'></MAGAZINE>
 </CANNON>
@@ -58,11 +135,22 @@
 <CANNON name='Disruptor' volume='4' basecost='10000' costmultiplier='700' minmk='6' maxmk='50'></CANNON>
 <CANNON name='Ion' volume='10' basecost='50000' costmultiplier='800' minmk='6' maxmk='50'></CANNON>
 <CANNON name='Plasma' volume='20' basecost='200000' costmultiplier='2000' minmk='6' maxmk='50'></CANNON>
-<WEAPON_MOUNT name='Fixed Mount' category='1'></WEAPON_MOUNT>
-<WEAPON_MOUNT name='Flexible Mount' category='2'></WEAPON_MOUNT>
-<WEAPON_MOUNT name='Turret Mount' category='3'></WEAPON_MOUNT>
+<WEAPON_MOUNT name='Fixed Mount' category='1' volume='1.0' basecost='5000'></WEAPON_MOUNT>
+<WEAPON_MOUNT name='Flexible Mount' category='2' volume='2.0' basecost='10000'></WEAPON_MOUNT>
+<WEAPON_MOUNT name='Turret Mount' category='3' volume='3.0' basecost='15000'></WEAPON_MOUNT>
 <MULTIPLE_FM name='x1' volume='1.0' cost='1.0'></MULTIPLE_FM>
 <MULTIPLE_FM name='x2' volume='2.0' cost='2.0'></MULTIPLE_FM>
 <MULTIPLE_FM name='x3' volume='3.0' cost='3.0'></MULTIPLE_FM>
 <MULTIPLE_FM name='x4' volume='4.0' cost='4.0'></MULTIPLE_FM>
+<CANNON_CATEGORY name='Cat 1' costmultiplier='1.0' minmk='6'  maxmk='10'></CANNON_CATEGORY>
+<CANNON_CATEGORY name='Cat 2' costmultiplier='2.0' minmk='11' maxmk='20'></CANNON_CATEGORY>
+<CANNON_CATEGORY name='Cat 3' costmultiplier='3.0' minmk='21' maxmk='30'></CANNON_CATEGORY>
+<CANNON_CATEGORY name='Cat 4' costmultiplier='4.0' minmk='31' maxmk='40'></CANNON_CATEGORY>
+<CANNON_CATEGORY name='Cat 5' costmultiplier='5.0' minmk='41' maxmk='50'></CANNON_CATEGORY>
+<WEAPON_HUD name='Standard' cost='0'></WEAPON_HUD>
+<WEAPON_HUD name='+5 to OB' cost='10000'></WEAPON_HUD>
+<WEAPON_HUD name='+10 to OB' cost='20000'></WEAPON_HUD>
+<WEAPON_HUD name='+15 to OB' cost='60000'></WEAPON_HUD>
+<WEAPON_HUD name='+20 to OB' cost='240000'></WEAPON_HUD>
+<WEAPON_HUD name='+25 to OB' cost='1200000'></WEAPON_HUD>
 </SMSD_RULES>
