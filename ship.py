@@ -1,5 +1,5 @@
 from PyQt4 import QtXml, QtCore
-from math import sqrt
+from math import *
 from smsd_xml import SaxSMSDRulesHandler
 
 class Ship(object):
@@ -10,6 +10,7 @@ class Ship(object):
         self.__hullTypeDict = dict()
         self.__sublightDriveTypesDict = dict()
         self.__translightDriveTypesDict = dict()
+        self.__systemMkDict = dict()
         self.__cannonTypeDict = dict()
         self.__weaponMountDict = dict()
         self.__multipleFMDict = dict()
@@ -22,6 +23,8 @@ class Ship(object):
         self.__cost = dict()
         self.__power = dict()
         self.__controlPoints = dict()
+        self.__computerMk = 0
+        self.__crew = 0
         self.__hull = 21
         self.__armorBelt = 0
         self.__sublightDriveRating = 0
@@ -392,6 +395,40 @@ class Ship(object):
         for name, points in self.__controlPoints.items():
             total += points
         return sqrt(total)
+    
+    def getControlPointsLeft(self):
+        return self.__crew + self.__computerMk - self.getTotalControlPoints() 
+
+    def changeCrew(self, crew):
+        self.__crew = crew
+        volume = crew * 10 * self.category
+        cost = crew * 5000 * self.category
+        self.addVolume("Control Areas", volume)
+        self.addCost("Control Areas", cost)
+        return (volume, cost)
+
+    def changeComputerMk(self, cMk):
+        self.__computerMk = cMk
+        volume = cMk * 0.01
+        cost =  cMk * 1000
+        self.addVolume("Computer", volume)
+        self.addCost("Computer", cost)
+        return (volume, cost)
+
+    def getMinComputerMk(self):
+        cntrlPts = self.getTotalControlPoints()
+        return max(20, cntrlPts * 2, (cntrlPts - self.__crew) * 10)
+
+#------------------------------------------------------------------------------
+# SYSTEMS Methods
+
+    def addSystemMkItem(self, name, data):
+        self.__systemMkDict[name] = data
+        print name
+        print data
+
+    def getSystemMkDict(self):
+        return self.__systemMkDict
 
 #------------------------------------------------------------------------------
 # MISC Methods

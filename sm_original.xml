@@ -127,6 +127,14 @@
 <TRANSLIGHT_DRIVE rating='29' displacement='17.25'></TRANSLIGHT_DRIVE>
 <TRANSLIGHT_DRIVE rating='30' displacement='17.5'></TRANSLIGHT_DRIVE>
 
+<SYSTEM_MK>
+    <SYSTEM_MK_ITEM name='Microfrequency Com Rig' minmk='0' maxmk='1000' basecost='0' costmultiplier='100' basevolume='5' volumemultiplier='0.1'></SYSTEM_MK_ITEM>
+    <SYSTEM_MK_ITEM name='Tight Beam Com Rig' minmk='0' maxmk='1000' basecost='0' costmultiplier='20000' basevolume='20' volumemultiplier='1.0'></SYSTEM_MK_ITEM>
+    <SYSTEM_MK_ITEM name='Tachyon Beam Com Rig' minmk='0' maxmk='50' basecost='0' costmultiplier='500000' basevolume='10000' volumemultiplier='500'></SYSTEM_MK_ITEM>
+    <SYSTEM_MK_ITEM name='Sensors' minmk='0' maxmk='100' basecost='0' costmultiplier='2000' basevolume='20' volumemultiplier='3'></SYSTEM_MK_ITEM>
+    <SYSTEM_MK_ITEM name='Electronic Warfare' minmk='0' maxmk='50' basecost='0' costmultiplier='30' basevolume='0' volumemultiplier='0.01'></SYSTEM_MK_ITEM>
+</SYSTEM_MK>
+
 <CANNON name='Auto' volume='1' basecost='500' costmultiplier='500' minmk='6' maxmk='50'>
     <MAGAZINE volume='0.5' basecost='0' costmultiplier='50'></MAGAZINE>
 </CANNON>

@@ -70,6 +70,21 @@ class SaxSMSDRulesHandler(QXmlDefaultHandler):
             self.ship.addTranslightType(attributes.value("rating").toInt()[0], \
                 attributes.value("displacement").toFloat()[0])
         
+        elif qName == "SYSTEM_MK":
+            self.__mode = "system_mk"
+        
+        elif qName == "SYSTEM_MK_ITEM":
+            if self.__mode != "system_mk":
+                print "SYSTEM_MK_ITEM outside of SYSTEM_MK tag" # TODO
+            else:
+                self.__system_mk_name = attributes.value("name")
+                self.__system_mk_data = (attributes.value("minmk").toInt()[0], \
+                        attributes.value("maxmk").toInt()[0], \
+                        attributes.value("basecost").toInt()[0], \
+                        attributes.value("costmultiplier").toInt()[0], \
+                        attributes.value("basevolume").toFloat()[0], \
+                        attributes.value("volumemultiplier").toFloat()[0])
+        
         elif qName == "CANNON":
             self.__mode = "cannon"
             self.__magazine = None
@@ -139,6 +154,22 @@ class SaxSMSDRulesHandler(QXmlDefaultHandler):
             else:
                 max = self.__text.toInt()
                 self.__hull_max = max[0]
+                
+        elif qName == "SYSTEM_MK_ITEM":
+            if self.__mode != "system_mk":
+                print "SYSTEM_MK_ITEM end tag outside of SYSTEM_MK tag" # TODO
+            elif self.__system_mk_name is None or self.__system_mk_data is None:
+                print "SYSTEM_MK_ITEM missing data"
+                self.__system_mk_name = None
+                self.__system_mk_data = None
+            else:
+                self.ship.addSystemMkItem(self.__system_mk_name, self.__system_mk_data)
+                self.__system_mk_name = None
+                self.__system_mk_data = None
+        
+        elif qName == "SYSTEM_MK":
+            self.__mode = None
+                
         elif qName == "CANNON":
             self.ship.addCannonType(self.__cannon_name, self.__cannon_volume, \
                 self.__cannon_basecost, self.__cannon_costmul, \

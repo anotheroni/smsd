@@ -3,6 +3,7 @@ from PyQt4 import QtCore, QtGui
 
 from ui_main_smsd import Ui_SMSD_Form
 from powerDialog import PowerDetailsDialog
+from controlPointDialog import ControlPointDetailsDialog
 from ship import Ship
 
 __version__ = 0.1
@@ -13,6 +14,7 @@ class SMSDForm(QtGui.QMainWindow, Ui_SMSD_Form):
         self.setupUi(self)
         
         self.__powerDialog = None
+        self.__controlPointDialog = None
         
         # Connect Signals
         QtCore.QObject.connect(self.fuelStorageSpinBox,QtCore.SIGNAL("valueChanged(int)"), self.fuelStorageChanged)
@@ -126,6 +128,21 @@ class SMSDForm(QtGui.QMainWindow, Ui_SMSD_Form):
             line += 1
         self.translightDriveTableWidget.selectRow(0)  #TODO
         
+        # Systems Tab
+        sysDict = self.ship.getSystemMkDict()
+        self.systemMkTableWidget.setRowCount(len(sysDict))
+        self.systemMkTableWidget.setColumnCount(4)
+        QTableWidget::setCellWidget()
+        line = 0
+        for name,date in sysDict.items():
+            item0 = QtGui.QTableWidgetItem()
+            item0.setText("%s" % name)
+            self.systemMkTableWidget.setItem(line, 0, item0)            
+            item1 = QtGui.QTableWidgetItem()
+            item1.setText("%d" % data)
+            self.systemMkTableWidget.setItem(line, 1, item1)
+            line += 1
+        
         # Armaments Tab
         for name in self.ship.getWeaponMountDict():
             self.cannonMountComboBox.addItem(name)
@@ -197,15 +214,6 @@ class SMSDForm(QtGui.QMainWindow, Ui_SMSD_Form):
             self.hullTableWidget.item(line, 5).setText("%d" % (self.ship.getTotalVolume() * hullTypeDict[cat][2]))  # Cost
             line += 1
 
-    def updatePowerStats(self):
-        self.powerVolumeLineEdit.setText("%0.2f" % self.ship.getVolume("power"))
-        self.powerCostLineEdit.setText("%d" % self.ship.getCost("power"))
-        if self.__powerDialog is not None:
-            self.__powerDialog.updateTable(self.ship.getPowerDict())
-    
-    def updateControlPointStats(self):
-        self.controlPointsLineEdit.setText("%0.1f" % self.ship.getTotalControlPoints())
-
     @QtCore.pyqtSignature("int,int,int,int")
     def on_hullTableWidget_currentCellChanged(self, newrow, newcol, oldrow, oldcol):
         if (newrow == oldrow):  # Same row, no change
@@ -218,6 +226,18 @@ class SMSDForm(QtGui.QMainWindow, Ui_SMSD_Form):
         else:
             self.hullTableWidget.selectRow(oldrow)
             print "New hull not valid! %d" % oldrow     # TODO better error message
+
+    @QtCore.pyqtSignature("int")
+    def on_armorBeltComboBox_currentIndexChanged(self, index):
+        self.ship.updateArmorBelt(index)
+        self.armorBeltCostLineEdit.setText("%d" % self.ship.getCost("Armor Belt"))
+        self.updateMainStats()
+
+    def streamlinedChanged(self):
+        stState = self.streamlinedCheckBox.isChecked()
+        self.ship.streamlinedChanged(stState)
+        self.streamlinedCostLineEdit.setText(self.ship.getStreamlinedCost())
+        self.updateMainStats()
 
 #------------------------------------------------------------------------------
 # DRIVES Tab
@@ -250,22 +270,16 @@ class SMSDForm(QtGui.QMainWindow, Ui_SMSD_Form):
         self.__powerDialog.show()
         self.__powerDialog.raise_()
 
-    @QtCore.pyqtSignature("int")
-    def on_armorBeltComboBox_currentIndexChanged(self, index):
-        self.ship.updateArmorBelt(index)
-        self.armorBeltCostLineEdit.setText("%d" % self.ship.getCost("Armor Belt"))
-        self.updateMainStats()
-
-    def streamlinedChanged(self):
-        stState = self.streamlinedCheckBox.isChecked()
-        self.ship.streamlinedChanged(stState)
-        self.streamlinedCostLineEdit.setText(self.ship.getStreamlinedCost())
-        self.updateMainStats()
-
     def fuelStorageChanged(self, capacity):
         self.ship.changeFuelCapacity(capacity)
         self.updatePowerStats()
         self.updateMainStats()
+
+    def updatePowerStats(self):
+        self.powerVolumeLineEdit.setText("%0.2f" % self.ship.getVolume("power"))
+        self.powerCostLineEdit.setText("%d" % self.ship.getCost("power"))
+        if self.__powerDialog is not None:
+            self.__powerDialog.updateTable(self.ship.getPowerDict())
 
 #------------------------------------------------------------------------------
 # SYSTEMS Tab
@@ -285,6 +299,54 @@ class SMSDForm(QtGui.QMainWindow, Ui_SMSD_Form):
         self.deflectorCostLineEdit.setText("%d" % self.ship.getCost("deflector"))
         self.updatePowerStats()
         self.updateMainStats()
+
+    def updateControlPointStats(self):
+        self.controlPointsLineEdit.setText("%0.1f" % self.ship.getTotalControlPoints())
+        if self.__controlPointDialog is not None:
+            self.__controlPointDialog.updateTable(self.ship.getControlPointDict())
+        self.updateMinComputerMk()
+        self.updateControlPointsLeft()
+
+    def updateControlPointsLeft(self):
+        cptleft = self.ship.getControlPointsLeft()
+        if cptleft < 0.0:
+            self.controlPointsLeftLabel.setText("<font color=red><b>%0.1f</b></font>" % cptleft)
+        else:
+            self.controlPointsLeftLabel.setText("%0.1f" % cptleft)
+
+    @QtCore.pyqtSignature("")
+    def on_controlPointDetailsPushButton_clicked(self):
+        if self.__controlPointDialog is None:
+            self.__controlPointDialog = ControlPointDetailsDialog(self.ship.getControlPointDict())
+        self.__controlPointDialog.show()
+        self.__controlPointDialog.raise_()
+
+    @QtCore.pyqtSignature("int")
+    def on_crewSpinBox_valueChanged(self, crew):
+        (volume, cost) = self.ship.changeCrew(crew)
+        self.controlAreasVolumeLineEdit.setText("%d" % volume)
+        self.controlAreasCostLineEdit.setText("%d" % cost)
+        self.controlPointsCrewLineEdit.setText("%d" % crew)
+        self.updateControlPointsLeft()
+        self.updateMainStats()
+
+    @QtCore.pyqtSignature("int")
+    def on_computerMkSpinBox_valueChanged(self, cMk):
+        (volume, cost) = self.ship.changeComputerMk(cMk)
+        self.computerVolumeLineEdit.setText(u"%0.2f" % volume)
+        self.computerCostLineEdit.setText(u"%d" % cost)
+        self.controlPointsComputerLineEdit.setText("%d" % cMk)
+        self.updateControlPointsLeft()        
+        self.updateMainStats()
+
+    def updateMinComputerMk(self):
+        minMk = self.ship.getMinComputerMk()
+        oldMin = self.computerMkSpinBox.minimum()
+        cvalue = self.computerMkSpinBox.value()
+        if cvalue < minMk:
+            self.computerMkSpinBox.setValue(minMk)
+        if oldMin != minMk:
+            self.computerMkSpinBox.setMinimum(minMk)
 
 #------------------------------------------------------------------------------
 # ARMAMENTS Tab
