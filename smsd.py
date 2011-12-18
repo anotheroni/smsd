@@ -132,14 +132,14 @@ class SMSDForm(QtGui.QMainWindow, Ui_SMSD_Form):
         sysDict = self.ship.getSystemMkDict()
         self.systemMkTableWidget.setRowCount(len(sysDict))
         self.systemMkTableWidget.setColumnCount(4)
-        QTableWidget::setCellWidget()
+        #QTableWidget::setCellWidget()
         line = 0
-        for name,date in sysDict.items():
+        for name, data in sysDict.items():
             item0 = QtGui.QTableWidgetItem()
             item0.setText("%s" % name)
             self.systemMkTableWidget.setItem(line, 0, item0)            
             item1 = QtGui.QTableWidgetItem()
-            item1.setText("%d" % data)
+            item1.setText("%d" % data[0])
             self.systemMkTableWidget.setItem(line, 1, item1)
             line += 1
         
@@ -196,10 +196,12 @@ class SMSDForm(QtGui.QMainWindow, Ui_SMSD_Form):
         self.updateHullTable()
         if not self.ship.changeHull(self.ship.getHull()):
             cat = self.ship.findValidHull()
-            if  cat is not None:
+            if cat is not None:
                 self.ship.changeHull(cat)
             else:
                 print "No Valid hull!"      # TODO real error message
+        self.updateSublightTable()
+        self.updateTranslightTable()
         self.landingGearChanged()
         self.streamlinedChanged()
         self.updatePowerStats()
@@ -280,6 +282,32 @@ class SMSDForm(QtGui.QMainWindow, Ui_SMSD_Form):
         self.powerCostLineEdit.setText("%d" % self.ship.getCost("power"))
         if self.__powerDialog is not None:
             self.__powerDialog.updateTable(self.ship.getPowerDict())
+    
+    def updateSublightTable(self):
+        sdtDict = self.ship.getSublightDriveTypesDict()
+        line = 0
+        for rating, data in sdtDict.items():
+            (volume, cost) = self.ship.getSublightDriveCost(rating)
+            item4 = QtGui.QTableWidgetItem()
+            item4.setText("%0.2f" % volume)
+            self.sublightDriveTableWidget.setItem(line, 3, item4)
+            item5 = QtGui.QTableWidgetItem()
+            item5.setText("%d" % cost)
+            self.sublightDriveTableWidget.setItem(line, 4, item5)
+            line += 1
+    
+    def updateTranslightTable(self):
+        tdtDict = self.ship.getTranslightDriveTypesDict()
+        line = 0
+        for rating, data in tdtDict.items():
+            (volume, cost) = self.ship.getTranslightDriveCost(rating)
+            item4 = QtGui.QTableWidgetItem()
+            item4.setText("%0.2f" % volume)
+            self.translightDriveTableWidget.setItem(line, 2, item4)
+            item5 = QtGui.QTableWidgetItem()
+            item5.setText("%d" % cost)
+            self.translightDriveTableWidget.setItem(line, 3, item5)
+            line += 1     
 
 #------------------------------------------------------------------------------
 # SYSTEMS Tab
@@ -487,10 +515,9 @@ class SMSDForm(QtGui.QMainWindow, Ui_SMSD_Form):
         self.lifeSupportNumberLineEdit.setText("%d" % self.ship.getLifeSupport())
         self.lifeSupportCostLineEdit.setText("%d" % self.ship.getCost("lifesupport"))
         self.lifeSupportVolumeLineEdit.setText("%d" % self.ship.getVolume("lifesupport"))
-
     
 if __name__ == "__main__":
-    app = QtGui.QApplication (sys.argv)
-    smsd = SMSDForm ()
-    smsd.show ()
-    sys.exit (app.exec_())
+    app = QtGui.QApplication(sys.argv)
+    smsd = SMSDForm()
+    smsd.show()
+    sys.exit(app.exec_())
