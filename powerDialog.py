@@ -1,15 +1,14 @@
 import sys
-from PyQt4 import QtCore, QtGui
+from PyQt4 import QtCore, QtGui, uic
 
-from ui_table_dialog import Ui_TableDialog
-
-class PowerDetailsDialog(QtGui.QDialog, Ui_TableDialog):
+class PowerDetailsDialog(QtGui.QDialog):
 
     def __init__(self, pwrDict):
         super(PowerDetailsDialog, self).__init__()
-        
-        self.setupUi(self)
-        
+
+        # import ui from Qt file
+        uic.loadUi('table_dialog.ui', self)
+
         self.tableWidget.setColumnCount(2)
         self.tableWidget.setHorizontalHeaderLabels(["System", "Rating"])
         

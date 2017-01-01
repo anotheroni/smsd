@@ -1,21 +1,22 @@
 import sys
-from PyQt4 import QtCore, QtGui
+from PyQt4 import QtCore, QtGui, uic
 
-from ui_main_smsd import Ui_SMSD_Form
 from powerDialog import PowerDetailsDialog
 from controlPointDialog import ControlPointDetailsDialog
 from ship import Ship
 
 __version__ = 0.1
 
-class SMSDForm(QtGui.QMainWindow, Ui_SMSD_Form):
+class SMSDForm(QtGui.QMainWindow):
     def __init__(self, parent=None):
         QtGui.QWidget.__init__(self, parent)
-        self.setupUi(self)
+
+        # import ui from Qt file
+        uic.loadUi('main_smsd.ui', self)
         
         self.__powerDialog = None
         self.__controlPointDialog = None
-        
+
         # Connect Signals
         QtCore.QObject.connect(self.fuelStorageSpinBox,QtCore.SIGNAL("valueChanged(int)"), self.fuelStorageChanged)
         QtCore.QObject.connect(self.streamlinedCheckBox, QtCore.SIGNAL("stateChanged(int)"), self.streamlinedChanged)
