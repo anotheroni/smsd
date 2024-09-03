@@ -1,4 +1,4 @@
-from PyQt4 import QtXml, QtCore
+from PyQt5 import QtXml, QtCore
 from math import *
 from smsd_xml import SaxSMSDRulesHandler
 
@@ -49,17 +49,17 @@ class Ship(object):
             fh = QtCore.QFile("sm_original.xml")
             input = QtXml.QXmlInputSource(fh)
             if not parser.parse(input):
-                raise ValueError, handler.error
-        except (IOError, OSError, ValueError), e:
-            print "Failed to import: %s" % e
+                raise ValueError(handler.error)
+        except (IOError, OSError, ValueError) as e:
+            print(f"Failed to import: {e}")
         finally:
             if fh is not None:
                 fh.close()
         
         if len(self.__shipClassDict) == 0:
-            print "ERROR: No ship classes"
+            print("ERROR: No ship classes")
         if len(self.__hullTypeDict) == 0:
-            print "ERROR: No hull types"
+            print("ERROR: No hull types")
         
         # Index: (Name, Cost Constant)
         self.__armorBeltConstant = {0:("None", 0), 1:("+5 DB and +5% HP", 100), 2:("+10 DB and +10% HP",  200),  \
@@ -92,7 +92,6 @@ class Ship(object):
         return self.__hullTypeDict
 
     def addHullType(self, hull_cat, hull_vol, hull_cost, name, min, max):
-        #print "New Hull %d %s %f %f %d" % (hull_cat, name, hull_vol, hull_cost, min)
         self.__hullTypeDict[hull_cat] = (name, hull_vol, hull_cost, min, max)
 
     def getHull(self):
@@ -213,13 +212,13 @@ class Ship(object):
     def calculateCannonCost(self, cType, cMk, cMount, cMult, cHud, cMag):
         cost = 0
         volume = 0
-        mk = cMk.toInt()[0]
+        mk = int(cMk)
         for name, data in self.__cannonCategoryDict.items():
             if mk >= data[1] and mk <= data[2]: # minMk and maxMk
                 catMul = data[0]
                 break
         else:
-            print "ERROR: no matching category" # TODO
+            print("ERROR: no matching category") # TODO
             catMul = 1000.0
         
         try:
@@ -228,27 +227,27 @@ class Ship(object):
             costMul = self.__cannonTypeDict[cType][2]
             magazine = self.__cannonTypeDict[cType][5]
         except KeyError:
-            print "ERROR: CannonType key %s doesn't exist" % cType  # TODO
+            print(f"ERROR: CannonType key {cType} doesn't exist") # TODO
             return (0, 0)
         
         try:
             mountVolMul = self.__weaponMountDict[cMount][1]
             mountBaseCost = self.__weaponMountDict[cMount][2]
         except KeyError:
-            print "ERROR: MountType key %s doesn't exist" % cMount  # TODO
+            print(f"ERROR: MountType key {cMount} doesn't exist") # TODO
             return (0, 0)
         
         try:
             multiVolMul = self.__multipleFMDict[cMult][0]
             multiCostMul = self.__multipleFMDict[cMult][1]
         except KeyError:
-            print "ERROR: MultipleMP key %s doesn't exist" % cMult  # TODO
+            print("ERROR: MultipleMP key %s doesn't exist" % cMult)  # TODO
             return (0, 0)
         
         try:
             hudCost = self.__weaponHudDict[cHud]
         except KeyError:
-            print "ERROR: HUD key %s doesn't exist" % cHud  # TODO
+            print("ERROR: HUD key %s doesn't exist" % cHud)  # TODO
             return (0, 0)
         
         cost = ((mk * costMul + baseCost) * catMul + mountBaseCost) * multiCostMul + hudCost
@@ -262,7 +261,7 @@ class Ship(object):
         (volume, cost) = self.calculateCannonCost(cType, cMk, cMount, cMult, cHud, cMag)
         self.addVolume("Cannon_%d" % self.__cannonCounter, volume)
         self.addCost("Cannon_%d" % self.__cannonCounter, cost)
-        self.addPower("Cannon_%d" % self.__cannonCounter, cMk.toInt()[0])
+        self.addPower("Cannon_%d" % self.__cannonCounter, int(cMk))
         self.addControlPoint("Weapon Mounts", len(self.__cannons))
         return (volume, cost)
 
@@ -278,7 +277,7 @@ class Ship(object):
                      mass <= self.__shipClassDict[cat][2]):
                 break
         else:
-            print "ERROR unknown category"      #TODO fix real error handling
+            print("ERROR unknown category")      #TODO fix real error handling
             return
         if self.category != cat:
             self.category = cat
@@ -424,8 +423,6 @@ class Ship(object):
 
     def addSystemMkItem(self, name, data):
         self.__systemMkDict[name] = data
-        print name
-        print data
 
     def getSystemMkDict(self):
         return self.__systemMkDict

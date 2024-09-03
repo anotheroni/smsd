@@ -1,10 +1,10 @@
 import sys
-from PyQt4 import QtCore, QtGui, uic
+from PyQt5 import QtCore, QtWidgets, uic
 
-class PowerDetailsDialog(QtGui.QDialog):
+class PowerDetailsDialog(QtWidgets.QDialog):
 
     def __init__(self, pwrDict):
-        super(PowerDetailsDialog, self).__init__()
+        super().__init__()
 
         # import ui from Qt file
         uic.loadUi('table_dialog.ui', self)
@@ -14,18 +14,11 @@ class PowerDetailsDialog(QtGui.QDialog):
         
         self.updateTable(pwrDict)
         
-        self.setWindowTitle(QtGui.QApplication.translate("PowerDialog", "Power Usage", None, QtGui.QApplication.UnicodeUTF8))
+        self.setWindowTitle("Power Usage")
 
-    def updateTable(self,  pwrDict):
+    def updateTable(self, pwrDict):
         self.tableWidget.setRowCount(len(pwrDict))
         
-        line=0
-        for key in pwrDict:
-            item = QtGui.QTableWidgetItem()
-            item.setText(QtGui.QApplication.translate("PowerDialog", key, None, QtGui.QApplication.UnicodeUTF8))
-            self.tableWidget.setItem(line,0,item)
-            item1 = QtGui.QTableWidgetItem()
-            item1.setText(QtGui.QApplication.translate("PowerDialog", "%0.2f" % pwrDict[key], None, QtGui.QApplication.UnicodeUTF8))
-            self.tableWidget.setItem(line,1,item1)
-            line += 1
-
+        for line, (key, value) in enumerate(pwrDict.items()):
+            self.tableWidget.setItem(line, 0, QtWidgets.QTableWidgetItem(key))
+            self.tableWidget.setItem(line, 1, QtWidgets.QTableWidgetItem(f"{value:.2f}"))
